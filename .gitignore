@@ -28,9 +28,16 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Data files (optional - uncomment if you want to exclude large datasets)
-# data/raw/*.csv
-# data/processed/*.csv
+# Data files - PROPRIETARY, DO NOT COMMIT
+data/raw/*.csv
+data/processed/*.csv
+data/features/*.csv
+
+# Results - contain proprietary analysis
+results/*.csv
+results/*.png
+results/*.jpg
+results/*.pdf
 
 # Jupyter Notebook
 .ipynb_checkpoints
