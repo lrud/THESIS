@@ -28,16 +28,10 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Data files - PROPRIETARY, DO NOT COMMIT
+# Data files - PROPRIETARY (from paid ResearchBitcoin API), DO NOT COMMIT
 data/raw/*.csv
 data/processed/*.csv
 data/features/*.csv
-
-# Results - contain proprietary analysis
-results/*.csv
-results/*.png
-results/*.jpg
-results/*.pdf
 
 # Jupyter Notebook
 .ipynb_checkpoints

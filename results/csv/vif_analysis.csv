@@ -1,0 +1,6 @@
+Variable,VIF,Multicollinearity
+dvol_lag1,4.2583746617548455,Low
+transaction_volume_usd,2.0016652895187876,Low
+active_addresses,2.926412828038466,Low
+nvrv,3.403235204685208,Low
+dvol_rv_spread,1.286294032221999,Low
