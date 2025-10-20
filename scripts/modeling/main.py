@@ -45,7 +45,7 @@ def main():
     )
     
     # Step 2: Create datasets and loaders
-    print("🔄 Creating data loaders...")
+    print(" Creating data loaders...")
     train_dataset = DVOLDataset(data_dict['X_train'], data_dict['y_train'])
     val_dataset = DVOLDataset(data_dict['X_val'], data_dict['y_val'])
     test_dataset = DVOLDataset(data_dict['X_test'], data_dict['y_test'])
@@ -59,7 +59,7 @@ def main():
     print(f"  Test batches:  {len(test_loader)}")
     
     # Step 3: Create model
-    print("\n🏗️  Creating model...")
+    print("\n🏗  Creating model...")
     model = create_model(
         input_size=data_dict['X_train'].shape[2],
         hidden_size=128,
@@ -87,7 +87,7 @@ def main():
     )
     
     # Step 5: Load best model
-    print("\n📂 Loading best model...")
+    print("\n Loading best model...")
     model.load_state_dict(torch.load(MODEL_SAVE_PATH))
     
     # Step 6: Evaluate on all datasets
@@ -109,19 +109,19 @@ def main():
     )
     
     # Step 7: Generate plots
-    print("\n📈 Generating visualizations...")
-    os.makedirs('results/visualizations', exist_ok=True)
+    print("\n Generating visualizations...")
+    os.makedirs('results/visualizations/lstm', exist_ok=True)
     os.makedirs('results/csv', exist_ok=True)
     
-    plot_training_history(history, 'results/visualizations/lstm_training_history.png')
-    plot_predictions(y_train_true, y_train_pred, 'Train', 'results/visualizations/lstm_train_predictions.png')
-    plot_predictions(y_val_true, y_val_pred, 'Validation', 'results/visualizations/lstm_val_predictions.png')
-    plot_predictions(y_test_true, y_test_pred, 'Test', 'results/visualizations/lstm_test_predictions.png')
+    plot_training_history(history, 'results/visualizations/lstm/training_history.png')
+    plot_predictions(y_train_true, y_train_pred, 'Train', 'results/visualizations/lstm/train_predictions.png')
+    plot_predictions(y_val_true, y_val_pred, 'Validation', 'results/visualizations/lstm/val_predictions.png')
+    plot_predictions(y_test_true, y_test_pred, 'Test', 'results/visualizations/lstm/test_predictions.png')
     
-    print("\n✅ Pipeline complete!")
-    print(f"\n📁 Model saved to: {MODEL_SAVE_PATH}")
-    print(f"📁 Visualizations saved to: results/visualizations/")
-    print(f"📁 CSV outputs saved to: results/csv/")
+    print("\n Pipeline complete!")
+    print(f"\n Model saved to: {MODEL_SAVE_PATH}")
+    print(f" Visualizations saved to: results/visualizations/lstm/")
+    print(f" CSV outputs saved to: results/csv/")
 
 
 if __name__ == '__main__':

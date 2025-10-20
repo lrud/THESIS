@@ -9,22 +9,14 @@ import torch
 
 
 def calculate_metrics(y_true, y_pred):
-    """Calculate regression metrics."""
-    # RMSE
     rmse = np.sqrt(np.mean((y_true - y_pred) ** 2))
-    
-    # MAE
     mae = np.mean(np.abs(y_true - y_pred))
-    
-    # MAPE (avoid division by zero)
     mape = np.mean(np.abs((y_true - y_pred) / (y_true + 1e-8))) * 100
     
-    # R²
     ss_res = np.sum((y_true - y_pred) ** 2)
     ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
     r2 = 1 - (ss_res / ss_tot)
     
-    # Directional accuracy
     direction_correct = np.sum(np.sign(y_true[1:] - y_true[:-1]) == 
                                np.sign(y_pred[1:] - y_pred[:-1]))
     directional_accuracy = (direction_correct / (len(y_true) - 1)) * 100
@@ -36,7 +28,6 @@ def calculate_metrics(y_true, y_pred):
         'R²': r2,
         'Directional_Accuracy_%': directional_accuracy
     }
-
 
 def get_predictions(model, data_loader, device):
     """Get predictions from model."""

@@ -7,7 +7,6 @@ import torch.nn as nn
 
 
 class DVOLDataset(torch.utils.data.Dataset):
-    """PyTorch Dataset for DVOL time series."""
     
     def __init__(self, X, y):
         self.X = torch.FloatTensor(X)
@@ -21,7 +20,6 @@ class DVOLDataset(torch.utils.data.Dataset):
 
 
 class LSTM_DVOL(nn.Module):
-    """LSTM model for DVOL forecasting with dropout and L2 regularization."""
     
     def __init__(self, input_size, hidden_size=128, num_layers=2, dropout=0.3, l2_reg=1e-4):
         super(LSTM_DVOL, self).__init__()
@@ -30,7 +28,6 @@ class LSTM_DVOL(nn.Module):
         self.num_layers = num_layers
         self.l2_reg = l2_reg
         
-        # LSTM layers
         self.lstm = nn.LSTM(
             input_size=input_size,
             hidden_size=hidden_size,
@@ -39,10 +36,8 @@ class LSTM_DVOL(nn.Module):
             batch_first=True
         )
         
-        # Dropout
         self.dropout = nn.Dropout(dropout)
         
-        # Fully connected layers
         self.fc1 = nn.Linear(hidden_size, hidden_size // 2)
         self.relu = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size // 2, 1)
@@ -54,7 +49,6 @@ class LSTM_DVOL(nn.Module):
         # Take last time step output
         last_output = lstm_out[:, -1, :]
         
-        # Fully connected layers with dropout
         out = self.dropout(last_output)
         out = self.fc1(out)
         out = self.relu(out)
@@ -64,11 +58,14 @@ class LSTM_DVOL(nn.Module):
         return out
     
     def l2_regularization(self):
-        """Calculate L2 regularization term."""
         l2_loss = 0
         for param in self.parameters():
             l2_loss += torch.norm(param, 2) ** 2
         return self.l2_reg * l2_loss
+
+
+def create_model(input_size, hidden_size=128, num_layers=2, dropout=0.3, l2_reg=1e-4, device='cuda'):
+    model = LSTM_DVOL(input_size, hidden_size, num_layers, dropout, l2_reg)
 
 
 def create_model(input_size, hidden_size=128, num_layers=2, dropout=0.3, l2_reg=1e-4, device='cuda'):

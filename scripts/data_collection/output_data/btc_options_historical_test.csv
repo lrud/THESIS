@@ -1,0 +1,6 @@
+timestamp_utc,date_label,instrument_name,strike,expiration,option_type,mark_price,open_interest,delta,gamma,vega,theta
+2025-09-01 12:00:00,Recent 2025,BTC-31OCT25-40000-C,40000.0,2025-10-31T04:00:00,call,,,,,,
+2025-09-01 12:00:00,Recent 2025,BTC-31OCT25-40000-P,40000.0,2025-10-31T04:00:00,put,,,,,,
+2025-09-01 12:00:00,Recent 2025,BTC-31OCT25-50000-C,50000.0,2025-10-31T04:00:00,call,,,,,,
+2025-09-01 12:00:00,Recent 2025,BTC-31OCT25-50000-P,50000.0,2025-10-31T04:00:00,put,,,,,,
+2025-09-01 12:00:00,Recent 2025,BTC-31OCT25-60000-C,60000.0,2025-10-31T04:00:00,call,,,,,,

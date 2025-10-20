@@ -9,19 +9,16 @@ from torch.utils.data import DataLoader
 
 
 def train_epoch(model, train_loader, criterion, optimizer, device):
-    """Train for one epoch."""
     model.train()
     losses = []
     
     for batch_X, batch_y in train_loader:
         batch_X, batch_y = batch_X.to(device), batch_y.to(device)
         
-        # Forward pass
         outputs = model(batch_X)
         loss = criterion(outputs, batch_y)
         loss = loss + model.l2_regularization()
         
-        # Backward pass
         optimizer.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
@@ -33,7 +30,6 @@ def train_epoch(model, train_loader, criterion, optimizer, device):
 
 
 def validate_epoch(model, val_loader, criterion, device):
-    """Validate for one epoch."""
     model.eval()
     losses = []
     
@@ -49,12 +45,6 @@ def validate_epoch(model, val_loader, criterion, device):
 
 def train_model(model, train_loader, val_loader, epochs=100, lr=0.001, device='cuda', 
                 early_stop_patience=15, model_save_path='models/lstm_baseline_best.pth'):
-    """
-    Complete training loop with early stopping.
-    
-    Returns:
-        history: Dictionary with training metrics
-    """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
@@ -98,8 +88,8 @@ def train_model(model, train_loader, val_loader, epochs=100, lr=0.001, device='c
             patience_counter += 1
         
         if patience_counter >= early_stop_patience:
-            print(f"\n⚠️  Early stopping at epoch {epoch+1}")
+            print(f"\nWARNING:  Early stopping at epoch {epoch+1}")
             break
     
-    print(f"\n✅ Training complete! Best val loss: {best_val_loss:.6f}")
+    print(f"\n Training complete! Best val loss: {best_val_loss:.6f}")
     return history

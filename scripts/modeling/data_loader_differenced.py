@@ -104,7 +104,7 @@ def split_temporal_data(X, y_diff, y_prev, train_ratio=0.6, val_ratio=0.2):
     print(f"  Train Δdvol - Mean: {y_diff_train.mean():.4f}, Std: {y_diff_train.std():.4f}")
     print(f"  Val Δdvol   - Mean: {y_diff_val.mean():.4f}, Std: {y_diff_val.std():.4f}")
     print(f"  Test Δdvol  - Mean: {y_diff_test.mean():.4f}, Std: {y_diff_test.std():.4f}")
-    print(f"  ✅ All means near 0 = Stationary!")
+    print(f"   All means near 0 = Stationary!")
     
     return (X_train, X_val, X_test, 
             y_diff_train, y_diff_val, y_diff_test,

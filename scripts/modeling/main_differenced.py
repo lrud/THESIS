@@ -50,7 +50,7 @@ def main():
     )
     
     # Step 2: Create datasets and loaders
-    print("\n🔄 Creating data loaders...")
+    print("\n Creating data loaders...")
     train_dataset = DVOLDataset(data_dict['X_train'], data_dict['y_diff_train'])
     val_dataset = DVOLDataset(data_dict['X_val'], data_dict['y_diff_val'])
     test_dataset = DVOLDataset(data_dict['X_test'], data_dict['y_diff_test'])
@@ -64,7 +64,7 @@ def main():
     print(f"  Test batches:  {len(test_loader)}")
     
     # Step 3: Create model
-    print("\n🏗️  Creating model...")
+    print("\n🏗  Creating model...")
     model = create_model(
         input_size=data_dict['X_train'].shape[2],
         hidden_size=128,
@@ -92,7 +92,7 @@ def main():
     )
     
     # Step 5: Load best model
-    print("\n📂 Loading best model...")
+    print("\n Loading best model...")
     model.load_state_dict(torch.load(MODEL_SAVE_PATH))
     
     # Step 6: Get predictions on differenced scale
@@ -119,7 +119,7 @@ def main():
     y_diff_test_actual, y_diff_test_pred = get_predictions_differenced(test_loader)
     
     # Step 7: Inverse transform differences
-    print("\n🔄 Inverse transforming differences to original scale...")
+    print("\n Inverse transforming differences to original scale...")
     scaler = data_dict['scaler_y_diff']
     
     y_diff_train_pred_orig = scaler.inverse_transform(y_diff_train_pred)
@@ -191,20 +191,20 @@ def main():
     print(f"{'='*80}\n")
     
     # Step 10: Generate plots
-    print("\n📈 Generating visualizations...")
-    os.makedirs('results/visualizations', exist_ok=True)
+    print("\n Generating visualizations...")
+    os.makedirs('results/visualizations/lstm_diff', exist_ok=True)
     os.makedirs('results/csv', exist_ok=True)
     
-    plot_training_history(history, 'results/visualizations/lstm_differenced_training_history.png')
+    plot_training_history(history, 'results/visualizations/lstm_diff/training_history.png')
     plot_predictions(y_train_actual, y_train_reconstructed, 'Train (Differenced)', 
-                    'results/visualizations/lstm_differenced_train_predictions.png')
+                    'results/visualizations/lstm_diff/train_predictions.png')
     plot_predictions(y_val_actual, y_val_reconstructed, 'Validation (Differenced)', 
-                    'results/visualizations/lstm_differenced_val_predictions.png')
+                    'results/visualizations/lstm_diff/val_predictions.png')
     plot_predictions(y_test_actual, y_test_reconstructed, 'Test (Differenced)', 
-                    'results/visualizations/lstm_differenced_test_predictions.png')
+                    'results/visualizations/lstm_diff/test_predictions.png')
     
     # Step 11: Save metrics to CSV
-    print("\n💾 Saving metrics to CSV...")
+    print("\n Saving metrics to CSV...")
     import pandas as pd
     
     metrics_df = pd.DataFrame({
@@ -220,12 +220,12 @@ def main():
         ]
     })
     metrics_df.to_csv('results/csv/lstm_differenced_metrics.csv', index=False)
-    print("✅ Saved: results/csv/lstm_differenced_metrics.csv")
+    print(" Saved: results/csv/lstm_differenced_metrics.csv")
     
-    print("\n✅ Pipeline complete!")
-    print(f"\n📁 Model saved to: {MODEL_SAVE_PATH}")
-    print(f"📁 Visualizations saved to: results/visualizations/")
-    print(f"📁 Metrics saved to: results/csv/")
+    print("\n Pipeline complete!")
+    print(f"\n Model saved to: {MODEL_SAVE_PATH}")
+    print(f" Visualizations saved to: results/visualizations/lstm_diff/")
+    print(f" Metrics saved to: results/csv/")
     
     print(f"\n{'='*80}")
     print("COMPARISON WITH BASELINE")
