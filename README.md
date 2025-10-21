@@ -4,16 +4,16 @@
 
 Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatility (DVOL) using on-chain metrics and historical volatility, validated by statistical accuracy.
 
-## Current Status (October 20, 2025)
+## Current Status (October 21, 2025)
 
 **Phase:** Jump-aware LSTM implemented - ROBUST forecasting across regimes ✅
 
 ### ✅ Completed
 
 **Data Collection & Preprocessing:**
-- 37,951 hourly samples (April 2021 - October 2025)
-- 5 core predictors engineered and validated
-- 4 jump detection features added (indicator, magnitude, timing, clustering)
+- 37,949 hourly samples (April 23, 2021 09:00 - October 14, 2025 23:00)
+- 9 core predictors engineered and validated
+- 11 jump detection features added (indicator, magnitude, timing, clustering)
 - Comprehensive statistical analysis confirmed LSTM suitability
 - No multicollinearity issues (all VIF < 5)
 
@@ -150,11 +150,12 @@ Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatilit
 - Reduces HAR-RV RMSE by 10-12% (Andersen et al. 2003)
 - Formula: DVOL - 30-day realized volatility
 
-**6. Options Open Interest** *(excluded from baseline - data acquisition pending)*
-- **Status:** Evaluated 8+ data sources, only OptionsDX viable (~$40-50 for historical data)
-- **Rationale for exclusion:** Building baseline model first with freely available features
+**6. Options Open Interest** *(experimental - partial data acquired)*
+- **Status:** Daily snapshot data collected (`btc_options_daily_snapshots.csv`)
+- **Coverage:** Limited timeframe, not integrated into baseline models
+- **Rationale:** Building baseline model first with freely available features
 - **Potential value:** Market depth indicator, informed trader positioning signal
-- **Next steps:** Consider acquisition if baseline results warrant enhancement
+- **Next steps:** Full historical dataset acquisition ($40-50 from OptionsDX) if baseline results warrant enhancement
 
 
 ## LSTM Architecture (Implemented)
@@ -163,26 +164,54 @@ Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatilit
 - **Architecture:** 2 LSTM layers, 128 hidden units each
 - **Regularization:** 0.3 dropout, 1e-4 L2 penalty
 - **Hardware:** 2x AMD Radeon RX 7900 XT GPUs (ROCm 7.0)
-- **Training:** Early stopping (patience=15), learning rate 1e-4
+- **Training:** Early stopping (patience=15), learning rate 1e-4, ReduceLROnPlateau
 - **Output:** Single value (Δdvol forecast), reconstructed to absolute DVOL
+
+## Dependencies
+
+```bash
+# PyTorch with ROCm 7.0 (AMD GPU support)
+pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.0
+
+# Additional requirements (see requirements-pytorch.txt)
+pip3 install -r requirements-pytorch.txt
+```
+
+## Reproducibility
+
+**Model Training Completion:**
+- Jump-Aware LSTM: October 20, 2025 15:58
+- Rolling Window LSTM: October 20, 2025 15:31
+- Differenced LSTM: October 16, 2025 19:57
+- Baseline LSTM: October 16, 2025 17:33
+
+**Data Splits:**
+- Train: 22,310 samples (April 23, 2021 - December 31, 2023)
+- Validation: 7,437 samples (January 1, 2024 - May 13, 2025)
+- Test: 7,437 samples (May 13, 2025 - October 14, 2025)
+
+**Hardware:** 2x AMD Radeon RX 7900 XT GPUs, ROCm 7.0
 
 ## Validation & Results
 
 **Training Splits:**
-- Train: 60% (April 2021 - December 2023)
-- Validation: 20% (January 2024 - November 2024)  
-- Test: 20% (November 2024 - October 2025)
+- Train: 60% (April 23, 2021 - December 31, 2023)
+- Validation: 20% (January 1, 2024 - May 13, 2025)
+- Test: 20% (May 13, 2025 - October 14, 2025)
 
 **Test Performance (All Models):**
 
 | Model | R² | RMSE | MAE | MAPE | Dir% | Parameters | Status |
 |-------|-----|------|-----|------|------|------------|--------|
 | Naive Persistence | 0.9970 | 0.49 | 0.26 | 0.54% | 50.6% | 0 | Baseline |
+| Naive Drift | 0.9970 | 0.49 | 0.26 | 0.54% | 50.6% | 0 | Trivial |
+| Naive MA5 | 0.9949 | 0.64 | 0.40 | 0.85% | 48.3% | 0 | Trivial |
 | LSTM (Differenced) | 0.9970 | 0.49 | 0.26 | 0.54% | 51.7% | 100K+ | ❌ Trivial |
 | HAR-RV (Differenced) | 0.9970 | 0.49 | 0.26 | 0.54% | 51.7% | 4 | ❌ Trivial |
 | HAR-RV (Absolute) | 0.9649 | 1.67 | 1.28 | 2.71% | 50.2% | 4 | ✅ Viable |
-| **LSTM (Rolling)** | **0.8804** | **3.04** | **2.39** | **5.07%** | **52.8%** | **210K** | ✅ **BEST** |
 | LSTM (Absolute) | -5.92 | 23.52 | 21.93 | 51.0% | 2.2% | 100K+ | ❌ Failed |
+| **LSTM (Rolling)** | **0.8804** | **3.04** | **2.39** | **5.07%** | **52.8%** | **210K** | ✅ **Genuine** |
+| LSTM (Jump-Aware) | 0.8624 | 3.14 | 2.48 | 5.32% | 48.8% | 210K | ✅ Crisis-Robust |
 
 **Key Insights:**
 - Differenced models: High R² but trivial (predict no change)
@@ -193,27 +222,30 @@ Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatilit
 ## Documentation
 
 **Key Documents:**
-- `docs/CRITICAL_ISSUE_NON_STATIONARY_TARGET.md` - Complete analysis of non-stationarity problem and solution
-- `docs/THESIS_METHODOLOGY_REFERENCE.md` - Comprehensive methodology for thesis writing
-- `docs/MODEL_TRAINING_PROGRESS_LOG.md` - Session timeline and implementation details
-- `docs/HISTORICAL_OI_INVESTIGATION.md` - Options OI data source research (8+ sources evaluated)
-- `results/BASELINE_LSTM_SUMMARY.md` - Statistical analysis and baseline results
+- `docs/QUICK_REFERENCE.md` - Complete performance summary and thesis defense points
+- `docs/STATISTICAL_ANALYSIS_COMPLETE.md` - Complete methodology and implementation details
+- `docs/JUMP_DETECTION_SUMMARY.md` - Jump detection process and validation
+- `docs/OVERFITTING_EXPLANATION_COMPLETE.md` - Trivial solution analysis
+- `docs/HOW_TO_FIX_TRIVIAL_SOLUTION.md` - Solution implementation guide
 
 ## Repository Structure
 
 ```
 ├── data/
-│   ├── processed/bitcoin_lstm_features.csv (37,927 samples)
-│   └── raw/ (DVOL, active addresses, NVRV)
-├── docs/ (6 comprehensive documentation files)
-├── models/ (baseline + differenced LSTM checkpoints)
+│   ├── processed/
+│   │   ├── bitcoin_lstm_features.csv (37,949 samples)
+│   │   └── bitcoin_lstm_features_with_jumps.csv (37,949 samples, 20 features)
+│   └── raw/ (DVOL, active addresses, NVRV, options snapshots)
+├── docs/ (7 comprehensive documentation files)
+├── models/ (4 LSTM model checkpoints)
 ├── scripts/
-│   ├── analysis/ (statistical diagnostics)
-│   ├── data_collection/ (API data fetching)
-│   └── modeling/ (modular LSTM pipeline)
+│   ├── analysis/ (statistical diagnostics, jump detection)
+│   ├── data_collection/ (API data fetching, options scraping)
+│   ├── modeling/ (LSTM training pipelines)
+│   └── benchmarking/ (HAR-RV, naive models)
 └── results/
-    ├── csv/ (8 analysis outputs)
-    └── visualizations/ (13 plots)
+    ├── csv/ (15 analysis outputs, metrics, diagnostics)
+    └── visualizations/ (diagnostic plots)
 ```
 
 ## References
