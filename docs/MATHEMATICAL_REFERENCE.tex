@@ -1,0 +1,203 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{enumitem}
+\geometry{a4paper, margin=1in}
+
+\title{Mathematical Reference: Bitcoin DVOL Forecasting Models}
+\author{Thesis 2025}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Core Problem: Volatility Forecasting}
+
+\textbf{Objective:} Forecast Bitcoin's 30-day implied volatility index (DVOL) one day ahead:
+\begin{equation}
+\hat{\sigma}_{t+1} = f(X_t, \theta)
+\end{equation}
+where $X_t$ contains historical volatility and on-chain metrics, $\theta$ are model parameters.
+
+\textbf{Intuition:} Volatility represents uncertainty about future price movements. High volatility periods (like market crashes) are more predictable than calm periods because they're driven by fundamental market stress rather than random noise.
+
+\section{LSTM Neural Networks}
+
+\subsection{Architecture}
+\begin{align}
+h_t &= \text{LSTM}(X_{t-w:t}, \theta_{\text{LSTM}}) \\
+\hat{y}_t &= W_2 \cdot \text{ReLU}(W_1 \cdot h_t + b_1) + b_2
+\end{align}
+
+\textbf{Key Components:}
+\begin{itemize}
+\item Input: $w = 24$ hour lookback window
+\item Hidden layers: 128 units each, 2 layers stacked
+\item Output: Single volatility forecast
+\item Parameters: $\sim 2.1 \times 10^5$ trainable
+\end{itemize}
+
+\subsection{LSTM Cell Equations}
+For time step $t$ with input $x_t$:
+\begin{align}
+f_t &= \sigma(W_f \cdot [h_{t-1}, x_t] + b_f) \quad \text{(forget gate)} \\
+i_t &= \sigma(W_i \cdot [h_{t-1}, x_t] + b_i) \quad \text{(input gate)} \\
+\tilde{C}_t &= \tanh(W_C \cdot [h_{t-1}, x_t] + b_C) \quad \text{(candidate)} \\
+C_t &= f_t \odot C_{t-1} + i_t \odot \tilde{C}_t \quad \text{(cell state)} \\
+o_t &= \sigma(W_o \cdot [h_{t-1}, x_t] + b_o) \quad \text{(output gate)} \\
+h_t &= o_t \odot \tanh(C_t) \quad \text{(hidden state)}
+\end{align}
+
+\textbf{Intuition:} LSTMs solve the vanishing gradient problem in long sequences through a memory cell with gates. The forget gate decides what information to discard, the input gate decides what new information to store, and the output gate decides what to expose. This allows the network to remember important patterns (like crisis precursors) over long time horizons.
+
+\subsection{Loss Functions}
+\textbf{Standard MSE:}
+\begin{equation}
+\mathcal{L} = \frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2
+\end{equation}
+
+\textbf{Jump-Aware Weighted MSE:}
+\begin{equation}
+\mathcal{L} = \frac{1}{N}\sum_{i=1}^{N} w_i(y_i - \hat{y}_i)^2
+\end{equation}
+where $w_i = 2$ for jump periods, $w_i = 1$ otherwise.
+
+\textbf{Intuition:} During market crises, getting the direction right matters more than precise magnitude. By doubling the loss during jumps, the model learns to prioritize crisis-period forecasting, even if it means slightly worse performance during normal periods. This reflects real-world risk management priorities.
+
+\section{Heterogeneous Autoregressive (HAR-RV) Model}
+
+\subsection{Core Specification}
+\begin{equation}
+RV_{t+h} = \beta_0 + \beta_d \cdot RV_t + \beta_w \cdot RV_t^{(w)} + \beta_m \cdot RV_t^{(m)} + \varepsilon_{t+h}
+\end{equation}
+
+\textbf{Component Definitions:}
+\begin{itemize}
+\item $RV_t$: Daily realized volatility (lag 1)
+\item $RV_t^{(w)} = \frac{1}{5}\sum_{i=0}^{4} RV_{t-i}$: Weekly average
+\item $RV_t^{(m)} = \frac{1}{22}\sum_{i=0}^{21} RV_{t-i}$: Monthly average
+\item $\varepsilon_{t+h} \sim \mathcal{N}(0, \sigma^2)$: Error term
+\end{itemize}
+
+\textbf{Intuition:} Volatility exhibits multi-scale persistence. Recent volatility captures immediate market reactions, weekly averages reflect medium-term trends (like news cycles), and monthly averages represent long-term market regime. This mirrors how traders actually think about volatility across different time horizons.
+
+\section{Data Preprocessing Methods}
+
+\subsection{Global Normalization}
+\begin{equation}
+x^{\text{norm}} = \frac{x - \mu}{\sigma}
+\end{equation}
+\textbf{Issue:} Fails when data regime shifts ($\mu_{\text{train}} = 69.32$, $\mu_{\text{test}} = 47.40$).
+
+\subsection{First Differencing}
+\begin{equation}
+\Delta y_t = y_t - y_{t-1}
+\end{equation}
+\textbf{Issue:} Creates trivial solution (predict $\Delta y_t \approx 0$).
+
+\textbf{Intuition:} First differences remove trends but also remove the very signal we want to predict. Since volatility is highly persistent, the optimal forecast becomes ``no change'' - which achieves perfect metrics but provides no real forecasting value.
+
+\subsection{Rolling Window Normalization}
+\begin{equation}
+y^{\text{roll}}_t = \frac{y_t - \mu_{t-W:t}}{\sigma_{t-W:t}}
+\end{equation}
+where $W = 720$ hours (30 days).
+
+\textbf{Intuition:} Think of this as measuring how unusual today's volatility is compared to the recent past. If markets have shifted to a new volatility regime (like post-ETF approval), the normalization automatically adjusts, preventing the model from being confused by the regime change while still allowing it to predict deviations from the new local baseline.
+
+\section{Jump Detection Methods}
+
+\subsection{Lee-Mykland (2008) Test}
+\textbf{Bipower Variation (robust to jumps):}
+\begin{equation}
+BV_t = \frac{\pi}{2} \left|\Delta y_t\right| \left|\Delta y_{t-1}\right|
+\end{equation}
+
+\textbf{Jump Test Statistic:}
+\begin{equation}
+L_t = \frac{(\Delta y_t)^2}{BV_t}, \quad S_t = \frac{1}{c}\sqrt{n} (L_t - 1)
+\end{equation}
+
+\textbf{Critical Threshold:}
+\begin{equation}
+c_\alpha = \beta - \frac{\log(\pi) + \log(\log(n))}{2\beta}, \quad \beta = \sqrt{2\log(n)}
+\end{equation}
+
+Jump detected if $S_t > c_\alpha$ at significance level $\alpha = 0.999$.
+
+\textbf{Intuition:} Imagine volatility as a smooth river (continuous price movement) with occasional waterfalls (jumps). Bipower variation measures the river's flow by ignoring waterfalls, while actual squared returns include both. When returns are much larger than expected from river flow alone, we've detected a waterfall - a market jump event.
+
+\section{Evaluation Metrics}
+
+\subsection{Accuracy Measures}
+\begin{align}
+R^2 &= 1 - \frac{\sum(y_i - \hat{y}_i)^2}{\sum(y_i - \bar{y})^2} \\
+\text{RMSE} &= \sqrt{\frac{1}{N}\sum(y_i - \hat{y}_i)^2} \\
+\text{MAPE} &= \frac{100\%}{N}\sum\left|\frac{y_i - \hat{y}_i}{y_i}\right|
+\end{align}
+
+\subsection{Directional Accuracy}
+\begin{equation}
+\text{DirAcc} = \frac{1}{N}\sum_{i=1}^{N} \mathbb{I}[\text{sign}(y_{i+1} - y_i) = \text{sign}(\hat{y}_{i+1} - y_i)]
+\end{equation}
+
+\textbf{Intuition:} Directional accuracy answers the practical question: ``Did I get the direction right?'' For volatility, this means predicting whether uncertainty will increase or decrease. 50\% is random chance, so anything above 50\% means the model has genuine predictive ability. During crises, even 54\% accuracy is valuable because being right about volatility direction can prevent major losses.
+
+\section{Statistical Validation Tests}
+
+\subsection{Stationarity}
+\begin{itemize}
+\item \textbf{ADF Test:} $H_0$: Series has unit root (non-stationary)
+\item \textbf{KPSS Test:} $H_0$: Series is stationary
+\end{itemize}
+
+\subsection{Autocorrelation}
+\begin{itemize}
+\item \textbf{Ljung-Box:} Tests joint significance of autocorrelations up to lag $k$
+\item \textbf{Durbin-Watson:} Tests first-order autocorrelation, range $[0, 4]$
+\end{itemize}
+
+\subsection{Heteroskedasticity}
+\begin{itemize}
+\item \textbf{ARCH Test:} $H_0$: No ARCH effects (constant variance)
+\item \textbf{White Test:} General test for heteroskedasticity
+\end{itemize}
+
+\section{Key Model Trade-offs}
+
+\subsection{Trivial vs. Genuine Forecasting}
+\begin{itemize}
+\item \textbf{Trivial:} $R^2 \approx 0.997$, DirAcc $\approx 50\%$ (predict no change)
+\item \textbf{Genuine:} $R^2 \approx 0.86$, DirAcc $> 50\%$ (real forecasting skill)
+\end{itemize}
+
+\subsection{Crisis Robustness}
+\begin{itemize}
+\item \textbf{Normal periods:} Focus on overall accuracy
+\item \textbf{Jump periods:} Prioritize directional accuracy during crises
+\item \textbf{Trade-off:} Sacrifice 4\% overall accuracy for 4\% crisis improvement
+\end{itemize}
+
+\section{Feature Engineering}
+
+\subsection{Core Predictors}
+\begin{enumerate}
+\item \textbf{Lagged DVOL:} $y_{t-1}, y_{t-7}, y_{t-30}$ (volatility persistence)
+\item \textbf{Transaction Volume:} $\text{USD volume}_t$ (market activity)
+\item \textbf{Network Activity:} $\text{active addresses}_t$ (adoption metric)
+\item \textbf{NVRV:} $\frac{\text{Market Cap} - \text{Realized Cap}}{\text{Realized Cap}}$ (holder profitability)
+\item \textbf{DVOL-RV Spread:} $\text{DVOL}_t - \text{RV}_t$ (risk premium)
+\end{enumerate}
+
+\textbf{Intuition:} These predictors capture different dimensions of market dynamics:
+\begin{itemize}
+\item \textbf{Lagged DVOL:} Volatility tends to cluster (high volatility follows high volatility)
+\item \textbf{Transaction Volume:} High trading volume often precedes volatility spikes as positions adjust
+\item \textbf{Network Activity:} Active addresses measure blockchain usage - declining activity can signal reduced confidence
+\item \textbf{NVRV:} Compares market price to realized value - high NVRV indicates speculative excess
+\item \textbf{DVOL-RV Spread:} Options market's risk premium - widens during uncertainty
+\end{itemize}
+
+\end{document}
