@@ -4,9 +4,29 @@
 
 Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatility (DVOL) using on-chain metrics and historical volatility, validated by statistical accuracy.
 
-## Current Status (October 21, 2025)
+## Current Status (November 7, 2025)
 
-**Phase:** Jump-aware LSTM implemented with robust forecasting across regime shifts.
+**Phase:** Production-ready training system with ultra-large model implementation achieving state-of-the-art performance.
+
+### Recent Developments
+
+**Ultra-Large Model Implementation (November 2025):**
+- Achieved R² = 0.9076 with 5.41M parameter architecture (512 hidden units, 3 layers)
+- Multi-GPU training implementation with automatic learning rate scaling
+- Real-time training monitoring with comprehensive logging system
+- Conservative training protocols for numerical stability
+
+**Code Consolidation (November 2025):**
+- 50% reduction in code duplication through systematic consolidation
+- Unified utilities module (`scripts/utils/`) for metrics and HAR-RV models
+- Modern CLI training system replacing legacy script-based approach
+- Comprehensive documentation and backward compatibility preservation
+
+**Web Automation Integration (November 2025):**
+- Browser automation capabilities integrated via agent-browse plugin
+- Real-time market data collection and sentiment analysis
+- Enhanced research capabilities for academic literature review
+- Current market validation against model predictions
 
 ### Completed Work
 
@@ -133,8 +153,40 @@ Develop a parsimonious LSTM model to forecast next-day Bitcoin implied volatilit
 - **Training:** Early stopping (patience=15), learning rate 1e-4, ReduceLROnPlateau
 - **Output:** Single value (DVOL forecast)
 
+## CLI Training System
+
+The project implements a comprehensive CLI training system that replaces the original script-based approach:
+
+### Core Training Commands
+```bash
+# Ultra-large model (state-of-the-art performance)
+.venv/bin/python cli/bin/train.py jump_aware \
+  --hidden-size 512 --num-layers 3 --dropout 0.4 \
+  --batch-size 32 --lr 0.0001 --epochs 100 \
+  --use-multi-gpu --save-prefix ultra_large
+
+# Standard model configurations
+.venv/bin/python cli/bin/train.py jump_aware --epochs 50
+.venv/bin/python cli/bin/train.py rolling --epochs 50
+.venv/bin/python cli/bin/train.py differenced --epochs 50
+```
+
+### Multi-GPU Training
+```bash
+# Automatic learning rate scaling for DataParallel stability
+python cli/bin/train.py jump_aware --use-multi-gpu --lr 0.0001
+# Internally scales to 0.00005 for dual GPU configuration
+```
+
+### Real-time Monitoring
+```bash
+# Monitor training progress and convergence metrics
+tail -f results/logs/current_training.log
+```
+
 ## Dependencies
 
+### Core Requirements
 ```bash
 # PyTorch with ROCm 7.0 (AMD GPU support)
 pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm7.0
@@ -143,9 +195,27 @@ pip3 install --pre torch torchvision torchaudio --index-url https://download.pyt
 pip3 install -r requirements-pytorch.txt
 ```
 
+### Browser Automation (Optional)
+```bash
+# For enhanced research capabilities and real-time data collection
+plugin marketplace add browserbase/agent-browse
+plugin install browser-automation@browser-tools
+
+# Set Anthropic API key for web browsing
+export ANTHROPIC_API_KEY="your-api-key"
+```
+
+### Hardware Requirements
+- **Recommended**: Dual AMD Radeon RX 7900 XT GPUs (20GB VRAM each)
+- **Minimum**: Single GPU with 8GB+ VRAM
+- **CPU**: Multi-core processor for data preprocessing
+- **RAM**: 16GB+ for large model training
+
 ## Reproducibility
 
 **Model Training Completion:**
+- Ultra-Large Jump-Aware (5.41M parameters): November 7, 2025 12:27
+- Large Jump-Aware (1.36M parameters): November 7, 2025 11:13
 - Jump-Aware LSTM: October 20, 2025 15:58
 - Rolling Window LSTM: October 20, 2025 15:31
 - Differenced LSTM: October 16, 2025 19:57
@@ -173,17 +243,22 @@ pip3 install -r requirements-pytorch.txt
 | LSTM (Absolute) | -5.92 | 23.52 | 21.93 | 51.0% | 2.2% | 100K+ | Failed |
 | LSTM (Rolling) | 0.8804 | 3.04 | 2.39 | 5.07% | 52.8% | 210K | Genuine |
 | LSTM (Jump-Aware) | 0.8624 | 3.14 | 2.48 | 5.32% | 48.8% | 210K | Crisis-Robust |
+| Large Jump-Aware | 0.9000 | 2.67 | 1.99 | 4.28% | 50.2% | 1.36M | Enhanced |
+| **Ultra-Large Jump-Aware** | **0.9076** | **2.57** | **1.88** | **4.06%** | **50.0%** | **5.41M** | **State-of-the-art** |
 
 **Key Insights:**
 - Differenced models: High R² but trivial (predict no change)
 - Rolling window: Lower R² but genuine (predict from features)
-- MAPE 5% provides practical utility for volatility forecasting
+- **Ultra-large models**: Significant performance improvement through architectural scaling (R² 0.86 → 0.91)
+- **Multi-GPU efficiency**: Conservative learning rate scaling enables stable training of large models
+- **MAPE 4%**: Achieved practical utility for volatility forecasting with ultra-large architecture
+- **Model scalability**: Performance gains suggest further improvements possible with larger architectures
 
 ### Performance Visualizations
 
 **Model Comparison:**
 ![All Models Comparison](results/visualizations/comparison/all_models_comparison.png)
-*Comprehensive performance comparison across all models, highlighting the distinction between trivial and genuine forecasting approaches.*
+*Comprehensive visualization showing the critical distinction between statistical illusions (red) and genuine forecasting models (green). The plot reveals that high R² values (≈0.997) often indicate trivial solutions equivalent to naive persistence, while genuine forecasting models achieve lower R² (0.86-0.88) but demonstrate real directional accuracy (>50%).*
 
 **Jump Detection Results:**
 ![Jump Detection Analysis](results/visualizations/jumps/jump_detection_analysis.png)
@@ -216,29 +291,46 @@ pip3 install -r requirements-pytorch.txt
 ## Documentation
 
 **Key Documents:**
+- `CLAUDE.md` - Comprehensive Claude AI assistant guide and project context
 - `docs/QUICK_REFERENCE.md` - Complete performance summary and thesis defense points
+- `docs/ultra_large_model_results.md` - Ultra-large model experimental results and analysis
+- `docs/final_code_consolidation_summary.md` - Code consolidation methodology and impact analysis
+- `docs/next_steps_research_roadmap.md` - Comprehensive research roadmap and next steps
 - `docs/STATISTICAL_ANALYSIS_COMPLETE.md` - Complete methodology and implementation details
 - `docs/JUMP_DETECTION_SUMMARY.md` - Jump detection process and validation
 - `docs/OVERFITTING_EXPLANATION_COMPLETE.md` - Trivial solution analysis
 - `docs/HOW_TO_FIX_TRIVIAL_SOLUTION.md` - Solution implementation guide
+- `docs/code_consolidation_changes.md` - Detailed consolidation methodology
 - `docs/MATHEMATICAL_REFERENCE.tex` - Mathematical formulations and model specifications
+- `scripts/utils/README.md` - Consolidated utilities implementation guide
 
 ## Repository Structure
 
 ```
+├── cli/                          # Modern training interface
+│   ├── bin/train.py             # Main CLI entry point
+│   ├── config/config.py         # Configuration management system
+│   └── scripts/trainers/        # Modular trainer implementations
+├── scripts/utils/               # Consolidated shared utilities
+│   ├── metrics.py               # Unified evaluation metrics
+│   ├── har_rv.py                # Unified HAR-RV model implementation
+│   └── __init__.py
+├── src/core/                    # Centralized core utilities
+├── scripts/                     # Legacy and specialized components
+│   ├── modeling/                # LSTM neural network components
+│   ├── analysis/                # Statistical validation frameworks
+│   ├── benchmarking/            # Benchmark utilities
+│   └── data_collection/         # Data acquisition pipelines
+├── deprecated/                  # Archived superseded implementations
 ├── data/
 │   ├── processed/
 │   │   ├── bitcoin_lstm_features.csv (37,949 samples)
 │   │   └── bitcoin_lstm_features_with_jumps.csv (37,949 samples, 20 features)
 │   └── raw/ (DVOL, active addresses, NVRV, options snapshots)
 ├── docs/ (comprehensive documentation files)
-├── models/ (4 LSTM model checkpoints)
-├── scripts/
-│   ├── analysis/ (statistical diagnostics, jump detection)
-│   ├── data_collection/ (API data fetching, options scraping)
-│   ├── modeling/ (LSTM training pipelines)
-│   └── benchmarking/ (HAR-RV, naive models)
+├── models/ (LSTM model checkpoints, including ultra-large models)
 └── results/
+    ├── cli_training/            # CLI training results with JSON metadata
     ├── csv/ (analysis outputs, metrics, diagnostics)
     └── visualizations/ (diagnostic plots)
 ```

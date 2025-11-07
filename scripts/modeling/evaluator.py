@@ -1,33 +1,20 @@
 """
 Evaluation metrics and visualization for LSTM model.
+
+Note: This module uses consolidated metrics from scripts.utils.metrics
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import torch
+import sys
+import os
 
+# Add parent directory to path for utils import
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-def calculate_metrics(y_true, y_pred):
-    rmse = np.sqrt(np.mean((y_true - y_pred) ** 2))
-    mae = np.mean(np.abs(y_true - y_pred))
-    mape = np.mean(np.abs((y_true - y_pred) / (y_true + 1e-8))) * 100
-    
-    ss_res = np.sum((y_true - y_pred) ** 2)
-    ss_tot = np.sum((y_true - np.mean(y_true)) ** 2)
-    r2 = 1 - (ss_res / ss_tot)
-    
-    direction_correct = np.sum(np.sign(y_true[1:] - y_true[:-1]) == 
-                               np.sign(y_pred[1:] - y_pred[:-1]))
-    directional_accuracy = (direction_correct / (len(y_true) - 1)) * 100
-    
-    return {
-        'RMSE': rmse,
-        'MAE': mae,
-        'MAPE': mape,
-        'R²': r2,
-        'Directional_Accuracy_%': directional_accuracy
-    }
+from utils.metrics import calculate_metrics
 
 def get_predictions(model, data_loader, device):
     """Get predictions from model."""

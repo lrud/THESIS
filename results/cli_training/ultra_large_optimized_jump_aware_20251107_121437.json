@@ -1,0 +1,104 @@
+{
+  "model_type": "jump_aware",
+  "config": {
+    "model_type": "jump_aware",
+    "hidden_size": 512,
+    "num_layers": 3,
+    "dropout": 0.4,
+    "learning_rate": 0.0003,
+    "batch_size": 32,
+    "epochs": 100,
+    "patience": 15,
+    "sequence_length": 24,
+    "window_size": 720,
+    "weight_jump_periods": 2.0,
+    "early_stop_patience": 10,
+    "use_multi_gpu": true
+  },
+  "training_time_minutes": 6.114593378702799,
+  "best_val_loss": Infinity,
+  "timestamp": "2025-11-07T12:14:37.440900",
+  "evaluation": {
+    "overall": {
+      "MSE": 6.472899436950684,
+      "RMSE": 2.544189453125,
+      "MAE": 1.8577117919921875,
+      "MAPE": 4.002917766571045,
+      "R\u00b2": 0.9094852209091187,
+      "Direction_%": 49.45953841659363
+    },
+    "normal": {
+      "MSE": 6.381349086761475,
+      "RMSE": 2.5261332988739014,
+      "MAE": 1.8515684604644775,
+      "MAPE": 3.993502140045166,
+      "R\u00b2": 0.9106605052947998,
+      "Direction_%": 50.16997674002505
+    },
+    "jump": {
+      "MSE": 6.880032062530518,
+      "RMSE": 2.622981548309326,
+      "MAE": 1.8850317001342773,
+      "MAPE": 4.044788837432861,
+      "R\u00b2": 0.9042676091194153,
+      "Direction_%": 48.646496815286625
+    },
+    "jump_samples": 1257,
+    "normal_samples": 5590
+  },
+  "history": {
+    "train_loss": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "val_loss": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "learning_rate": [
+      0.00015,
+      0.00015,
+      0.00015,
+      0.00015,
+      0.00015,
+      0.00015,
+      7.5e-05,
+      7.5e-05,
+      7.5e-05,
+      7.5e-05,
+      7.5e-05,
+      7.5e-05,
+      3.75e-05,
+      3.75e-05,
+      3.75e-05
+    ]
+  },
+  "model_path": "models/ultra_large_optimized_jump_aware_best.pth",
+  "parameters": 5409281
+}
