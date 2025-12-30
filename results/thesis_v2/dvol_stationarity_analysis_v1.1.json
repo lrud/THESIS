@@ -1,0 +1,46 @@
+{
+  "data_version": "v1.1",
+  "timestamp": "2025-12-29T14:01:01.264206",
+  "results": {
+    "DVOL Levels": {
+      "adf_pvalue": 0.007954133929621928,
+      "adf_stationary": "True",
+      "kpss_pvalue": 0.01,
+      "kpss_stationary": "False",
+      "overall_stationary": "False",
+      "observations": 39472,
+      "mean": 61.9783517430077,
+      "std": 18.63240154180423
+    },
+    "DVOL Changes": {
+      "adf_pvalue": 0.0,
+      "adf_stationary": true,
+      "kpss_pvalue": 0.1,
+      "kpss_stationary": "True",
+      "overall_stationary": "True",
+      "observations": 39471,
+      "mean": -0.0012989283271262445,
+      "std": 0.7377250362666641
+    },
+    "DVOL Absolute Changes": {
+      "adf_pvalue": 5.781223594700787e-26,
+      "adf_stationary": "True",
+      "kpss_pvalue": 0.01,
+      "kpss_stationary": "False",
+      "overall_stationary": "False",
+      "observations": 39471,
+      "mean": 0.360902688049454,
+      "std": 0.6434173343617678
+    },
+    "DVOL Percentage Changes": {
+      "adf_pvalue": 0.0,
+      "adf_stationary": true,
+      "kpss_pvalue": 0.1,
+      "kpss_stationary": "True",
+      "overall_stationary": "True",
+      "observations": 39471,
+      "mean": 3.251303761272954e-05,
+      "std": 0.010337914159597571
+    }
+  }
+}

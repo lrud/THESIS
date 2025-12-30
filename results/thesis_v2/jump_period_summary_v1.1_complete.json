@@ -1,0 +1,24 @@
+{
+  "data_version": "v1.1_complete",
+  "total_observations": 39472,
+  "total_jumps": 7560,
+  "jump_percentage": 19.15281718686664,
+  "persistence_analysis": {
+    "24": {
+      "volatility_ratio": NaN,
+      "persistent": "False",
+      "avg_volatility": NaN
+    },
+    "48": {
+      "volatility_ratio": NaN,
+      "persistent": "False",
+      "avg_volatility": NaN
+    },
+    "72": {
+      "volatility_ratio": NaN,
+      "persistent": "False",
+      "avg_volatility": NaN
+    }
+  },
+  "recommended_windows": []
+}

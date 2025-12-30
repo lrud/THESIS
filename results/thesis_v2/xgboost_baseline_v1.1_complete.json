@@ -1,0 +1,82 @@
+{
+  "model_specification": {
+    "model_type": "xgboost",
+    "target": "next_dvol_change",
+    "features": [
+      "dvol",
+      "dvol_lag_1d",
+      "dvol_lag_7d",
+      "dvol_lag_30d",
+      "transaction_volume",
+      "network_activity",
+      "nvrv",
+      "dvol_rv_spread"
+    ],
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 6,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "random_state": 42
+    },
+    "feature_importance": {
+      "dvol": 0.10176800936460495,
+      "dvol_lag_1d": 0.1133187860250473,
+      "dvol_lag_7d": 0.15771397948265076,
+      "dvol_lag_30d": 0.12348875403404236,
+      "transaction_volume": 0.10586473345756531,
+      "network_activity": 0.11249513179063797,
+      "nvrv": 0.17366154491901398,
+      "dvol_rv_spread": 0.1116890162229538
+    }
+  },
+  "data_info": {
+    "total_observations": 39471,
+    "training_samples": 27629,
+    "testing_samples": 11842,
+    "jump_periods_test": 2192
+  },
+  "performance_metrics": {
+    "training": {
+      "jump_periods": {
+        "r2": 0.6286824532702566,
+        "rmse": 0.8030408612086536,
+        "mae": 0.48919262811854886,
+        "samples": 5367
+      },
+      "normal_periods": {
+        "r2": 0.2665790781935231,
+        "rmse": 0.5471270975131344,
+        "mae": 0.3306093182790922,
+        "samples": 22262
+      },
+      "overall": {
+        "r2": 0.4500034577264995,
+        "rmse": 0.6053655347386339,
+        "mae": 0.3614145093431323,
+        "samples": 27629
+      }
+    },
+    "testing": {
+      "jump_periods": {
+        "r2": -0.009310836829429237,
+        "rmse": 0.8166308736503494,
+        "mae": 0.4191837955874487,
+        "samples": 2192
+      },
+      "normal_periods": {
+        "r2": -0.2516580834130284,
+        "rmse": 0.45883521158552226,
+        "mae": 0.29404675155188376,
+        "samples": 9650
+      },
+      "overall": {
+        "r2": -0.13731563775849343,
+        "rmse": 0.5431418369157913,
+        "mae": 0.3172101023816387,
+        "samples": 11842
+      }
+    }
+  }
+}

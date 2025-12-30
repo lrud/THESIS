@@ -1,0 +1,353 @@
+{
+  "jump_periods": {
+    "directional_accuracy": {
+      "value": 0.47114474929044464,
+      "correct_predictions": 996,
+      "total_predictions": 2114,
+      "interpretation": "Model worse than random"
+    },
+    "coefficient_significance": {
+      "dvol": {
+        "coefficient": -0.1005161501792124,
+        "std_error": 0.023984690943236908,
+        "t_statistic": -4.190846170046459,
+        "p_value": 2.7881427254738966e-05,
+        "significant": true
+      },
+      "dvol_lag_1d": {
+        "coefficient": 0.05953942626453378,
+        "std_error": 0.025160684526545088,
+        "t_statistic": 2.366367504895121,
+        "p_value": 0.017970737813667537,
+        "significant": true
+      },
+      "dvol_lag_7d": {
+        "coefficient": 0.0006377554416963707,
+        "std_error": 0.012151048488808184,
+        "t_statistic": 0.05248563054322269,
+        "p_value": 0.9581421394962597,
+        "significant": false
+      },
+      "dvol_lag_30d": {
+        "coefficient": 0.023893231618122103,
+        "std_error": 0.00781228095340899,
+        "t_statistic": 3.058419398971562,
+        "p_value": 0.002227293676762443,
+        "significant": true
+      },
+      "transaction_volume": {
+        "coefficient": 0.010684879754807301,
+        "std_error": 0.004958746671314602,
+        "t_statistic": 2.1547541068426184,
+        "p_value": 0.031190043799560918,
+        "significant": true
+      },
+      "network_activity": {
+        "coefficient": 0.006942335240041378,
+        "std_error": 0.006552762707971496,
+        "t_statistic": 1.0594516464934651,
+        "p_value": 0.2894037753332501,
+        "significant": false
+      },
+      "nvrv": {
+        "coefficient": -0.001012547584736111,
+        "std_error": 0.005407720498040677,
+        "t_statistic": -0.18724110928125387,
+        "p_value": 0.8514730246598874,
+        "significant": false
+      },
+      "dvol_rv_spread": {
+        "coefficient": -0.025348697945049257,
+        "std_error": 0.0054169528289761655,
+        "t_statistic": -4.679512402148848,
+        "p_value": 2.8897536379357547e-06,
+        "significant": true
+      }
+    },
+    "residual_diagnostics": {
+      "jarque_bera": {
+        "statistic": 1947449.7746773881,
+        "p_value": 0.0,
+        "is_normal": false,
+        "interpretation": "Residuals NOT normally distributed"
+      },
+      "ljung_box": {
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "has_autocorrelation": false,
+        "interpretation": "No significant autocorrelation"
+      }
+    },
+    "forecast_significance": {
+      "diebold_mariano": {
+        "statistic": -1.470864289404738,
+        "p_value": 0.14132782185833204,
+        "beats_naive": false,
+        "interpretation": "Model NOT better than naive"
+      },
+      "theils_u": {
+        "value": 0.9981434880025214,
+        "interpretation": "Better than naive",
+        "beats_naive": "True"
+      },
+      "sign_test": {
+        "wins": 962,
+        "total": 2114,
+        "p_value": 1.9508722436097334e-05,
+        "significantly_better": true
+      }
+    },
+    "confidence_intervals": {
+      "r2": {
+        "value": 0.0036349279936417345,
+        "ci_lower": 0.00332614890405639,
+        "ci_upper": 0.003943707083227079,
+        "adjusted_r2": -0.00015173261255818637
+      }
+    },
+    "sample_characteristics": {
+      "n_samples": 2114,
+      "n_parameters": 8,
+      "residual_mean": -0.012087375147920352,
+      "residual_std": 0.818140799111684,
+      "actual_mean": 0.007095553453169381,
+      "actual_std": 0.819721255060071,
+      "predicted_mean": 0.019182928601089735,
+      "predicted_std": 0.027646833534971053
+    }
+  },
+  "normal_periods": {
+    "directional_accuracy": {
+      "value": 0.46747923632833566,
+      "correct_predictions": 4334,
+      "total_predictions": 9271,
+      "interpretation": "Model worse than random"
+    },
+    "coefficient_significance": {
+      "dvol": {
+        "coefficient": -0.1005161501792124,
+        "std_error": 0.023984690943236908,
+        "t_statistic": -4.190846170046459,
+        "p_value": 2.7881427254738966e-05,
+        "significant": true
+      },
+      "dvol_lag_1d": {
+        "coefficient": 0.05953942626453378,
+        "std_error": 0.025160684526545088,
+        "t_statistic": 2.366367504895121,
+        "p_value": 0.017970737813667537,
+        "significant": true
+      },
+      "dvol_lag_7d": {
+        "coefficient": 0.0006377554416963707,
+        "std_error": 0.012151048488808184,
+        "t_statistic": 0.05248563054322269,
+        "p_value": 0.9581421394962597,
+        "significant": false
+      },
+      "dvol_lag_30d": {
+        "coefficient": 0.023893231618122103,
+        "std_error": 0.00781228095340899,
+        "t_statistic": 3.058419398971562,
+        "p_value": 0.002227293676762443,
+        "significant": true
+      },
+      "transaction_volume": {
+        "coefficient": 0.010684879754807301,
+        "std_error": 0.004958746671314602,
+        "t_statistic": 2.1547541068426184,
+        "p_value": 0.031190043799560918,
+        "significant": true
+      },
+      "network_activity": {
+        "coefficient": 0.006942335240041378,
+        "std_error": 0.006552762707971496,
+        "t_statistic": 1.0594516464934651,
+        "p_value": 0.2894037753332501,
+        "significant": false
+      },
+      "nvrv": {
+        "coefficient": -0.001012547584736111,
+        "std_error": 0.005407720498040677,
+        "t_statistic": -0.18724110928125387,
+        "p_value": 0.8514730246598874,
+        "significant": false
+      },
+      "dvol_rv_spread": {
+        "coefficient": -0.025348697945049257,
+        "std_error": 0.0054169528289761655,
+        "t_statistic": -4.679512402148848,
+        "p_value": 2.8897536379357547e-06,
+        "significant": true
+      }
+    },
+    "residual_diagnostics": {
+      "jarque_bera": {
+        "statistic": 122437.37639639815,
+        "p_value": 0.0,
+        "is_normal": false,
+        "interpretation": "Residuals NOT normally distributed"
+      },
+      "ljung_box": {
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "has_autocorrelation": false,
+        "interpretation": "No significant autocorrelation"
+      }
+    },
+    "forecast_significance": {
+      "diebold_mariano": {
+        "statistic": 2.873113556450662,
+        "p_value": 0.004064479929877907,
+        "beats_naive": false,
+        "interpretation": "Model NOT better than naive"
+      },
+      "theils_u": {
+        "value": 1.0034846183467991,
+        "interpretation": "Worse than naive",
+        "beats_naive": "False"
+      },
+      "sign_test": {
+        "wins": 4119,
+        "total": 9271,
+        "p_value": 3.716400350722277e-27,
+        "significantly_better": true
+      }
+    },
+    "confidence_intervals": {
+      "r2": {
+        "value": -0.00701751929219907,
+        "ci_lower": 0.0,
+        "ci_upper": 0.18898248070780094,
+        "adjusted_r2": -0.007887324966387999
+      }
+    },
+    "sample_characteristics": {
+      "n_samples": 9271,
+      "n_parameters": 8,
+      "residual_mean": -0.02336466227605875,
+      "residual_std": 0.39970299833666384,
+      "actual_mean": -0.00239024916405998,
+      "actual_std": 0.39898780249339677,
+      "predicted_mean": 0.020974413111998772,
+      "predicted_std": 0.029218782098565092
+    }
+  },
+  "overall": {
+    "directional_accuracy": {
+      "value": 0.4681598594642073,
+      "correct_predictions": 5330,
+      "total_predictions": 11385,
+      "interpretation": "Model worse than random"
+    },
+    "coefficient_significance": {
+      "dvol": {
+        "coefficient": -0.1005161501792124,
+        "std_error": 0.023984690943236908,
+        "t_statistic": -4.190846170046459,
+        "p_value": 2.7881427254738966e-05,
+        "significant": true
+      },
+      "dvol_lag_1d": {
+        "coefficient": 0.05953942626453378,
+        "std_error": 0.025160684526545088,
+        "t_statistic": 2.366367504895121,
+        "p_value": 0.017970737813667537,
+        "significant": true
+      },
+      "dvol_lag_7d": {
+        "coefficient": 0.0006377554416963707,
+        "std_error": 0.012151048488808184,
+        "t_statistic": 0.05248563054322269,
+        "p_value": 0.9581421394962597,
+        "significant": false
+      },
+      "dvol_lag_30d": {
+        "coefficient": 0.023893231618122103,
+        "std_error": 0.00781228095340899,
+        "t_statistic": 3.058419398971562,
+        "p_value": 0.002227293676762443,
+        "significant": true
+      },
+      "transaction_volume": {
+        "coefficient": 0.010684879754807301,
+        "std_error": 0.004958746671314602,
+        "t_statistic": 2.1547541068426184,
+        "p_value": 0.031190043799560918,
+        "significant": true
+      },
+      "network_activity": {
+        "coefficient": 0.006942335240041378,
+        "std_error": 0.006552762707971496,
+        "t_statistic": 1.0594516464934651,
+        "p_value": 0.2894037753332501,
+        "significant": false
+      },
+      "nvrv": {
+        "coefficient": -0.001012547584736111,
+        "std_error": 0.005407720498040677,
+        "t_statistic": -0.18724110928125387,
+        "p_value": 0.8514730246598874,
+        "significant": false
+      },
+      "dvol_rv_spread": {
+        "coefficient": -0.025348697945049257,
+        "std_error": 0.0054169528289761655,
+        "t_statistic": -4.679512402148848,
+        "p_value": 2.8897536379357547e-06,
+        "significant": true
+      }
+    },
+    "residual_diagnostics": {
+      "jarque_bera": {
+        "statistic": 18736878.83768562,
+        "p_value": 0.0,
+        "is_normal": false,
+        "interpretation": "Residuals NOT normally distributed"
+      },
+      "ljung_box": {
+        "statistic": 0.0,
+        "p_value": 1.0,
+        "has_autocorrelation": false,
+        "interpretation": "No significant autocorrelation"
+      }
+    },
+    "forecast_significance": {
+      "diebold_mariano": {
+        "statistic": 0.992722347891662,
+        "p_value": 0.32084528104726373,
+        "beats_naive": false,
+        "interpretation": "Model NOT better than naive"
+      },
+      "theils_u": {
+        "value": 1.000868620768517,
+        "interpretation": "Worse than naive",
+        "beats_naive": "False"
+      },
+      "sign_test": {
+        "wins": 5081,
+        "total": 11385,
+        "p_value": 1.0052372030422492e-30,
+        "significantly_better": true
+      }
+    },
+    "confidence_intervals": {
+      "r2": {
+        "value": -0.001739553341461031,
+        "ci_lower": 0.0,
+        "ci_upper": 0.19426044665853898,
+        "adjusted_r2": -0.0024440115364972037
+      }
+    },
+    "sample_characteristics": {
+      "n_samples": 11385,
+      "n_parameters": 8,
+      "residual_mean": -0.021270662716209424,
+      "residual_std": 0.5043849948619855,
+      "actual_mean": -0.0006288976723759336,
+      "actual_std": 0.5043947831226459,
+      "predicted_mean": 0.020641765043833492,
+      "predicted_std": 0.028941740505310117
+    }
+  }
+}

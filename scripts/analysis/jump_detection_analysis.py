@@ -4,16 +4,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from pathlib import Path
+import argparse
+import json
+from datetime import datetime
 
 class JumpDetectionAnalysis:
     """
     Detect and analyze jump events in Bitcoin DVOL time series.
-    
+
     Uses multiple methods:
     1. Lee-Mykland (2008): Statistical jump test using bipower variation
     2. Standard deviation threshold: Simple >3σ outlier detection
     3. Z-score on returns: Identifies abnormal changes
-    
+
     Fat-tail events in data period (2021-2025):
     - May 2021: China mining ban
     - May-July 2022: Luna/UST collapse, 3AC
@@ -21,9 +24,10 @@ class JumpDetectionAnalysis:
     - March 2023: Banking crisis (SVB)
     - 2024-2025: ETF approval, institutional adoption
     """
-    
-    def __init__(self, data_path='data/processed/bitcoin_lstm_features.csv'):
+
+    def __init__(self, data_path='data/processed/bitcoin_lstm_features.csv', data_version='v1.0'):
         self.data_path = data_path
+        self.data_version = data_version
         self.df = None
         self.jumps = None
         
@@ -32,11 +36,12 @@ class JumpDetectionAnalysis:
         self.df = pd.read_csv(self.data_path)
         self.df['timestamp'] = pd.to_datetime(self.df['timestamp'])
         self.df = self.df.sort_values('timestamp').reset_index(drop=True)
-        
+
         print("=" * 80)
         print("JUMP DETECTION ANALYSIS")
         print("=" * 80)
-        print(f"\nDataset: {len(self.df):,} hourly observations")
+        print(f"\nData Version: {self.data_version}")
+        print(f"Dataset: {len(self.df):,} hourly observations")
         print(f"Period: {self.df['timestamp'].min()} to {self.df['timestamp'].max()}")
         print(f"DVOL range: {self.df['dvol'].min():.2f} - {self.df['dvol'].max():.2f}")
         print(f"DVOL mean: {self.df['dvol'].mean():.2f}, std: {self.df['dvol'].std():.2f}")
@@ -489,7 +494,8 @@ class JumpDetectionAnalysis:
     
     def save_jump_data(self):
         """Save dataset with jump indicators."""
-        output_path = 'data/processed/bitcoin_lstm_features_with_jumps.csv'
+        # Include data version in output path
+        output_path = f'data/processed/bitcoin_lstm_features_{self.data_version}_with_jumps.csv'
         self.df.to_csv(output_path, index=False)
         print(f"\n" + "=" * 80)
         print(f"SAVED: {output_path}")
@@ -500,24 +506,186 @@ class JumpDetectionAnalysis:
         print("  - days_since_jump: Time since last jump")
         print("  - jump_cluster_7d: Jump count in 7-day window")
         print()
-    
-    def run_full_analysis(self):
+
+    def analyze_jump_persistence_and_export_masks(self, output_dir='results/thesis_v2'):
+        """
+        Analyze jump persistence patterns and export standardized jump period masks.
+
+        This method addresses the research question: How long do jump effects persist?
+        Based on empirical analysis and literature standards for jump window definition.
+        """
+        print("=" * 80)
+        print("JUMP PERSISTENCE ANALYSIS & MASK EXPORT")
+        print("=" * 80)
+        print("Analyzing jump duration patterns for thesis evaluation framework")
+        print()
+
+        # Ensure output directory exists
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+        # Analyze persistence patterns for different jump magnitudes
+        jumps_df = self.df[self.df['jump_any']].copy()
+        print(f"Found {len(jumps_df):,} jump periods ({len(jumps_df)/len(self.df)*100:.1f}% of data)")
+        print()
+
+        # Categorize jumps by magnitude for persistence analysis
+        jumps_df['jump_category'] = pd.cut(
+            jumps_df['jump_magnitude'],
+            bins=[0, 1, 2, np.inf],
+            labels=['Small', 'Medium', 'Large']
+        )
+
+        print("Jump magnitude distribution:")
+        for category in ['Small', 'Medium', 'Large']:
+            count = len(jumps_df[jumps_df['jump_category'] == category])
+            print(f"  {category}: {count:,} jumps ({count/len(jumps_df)*100:.1f}%)")
+        print()
+
+        # Analyze persistence: How long until DVOL returns to near-normal levels?
+        print("Analyzing jump persistence patterns:")
+        print("-" * 50)
+
+        persistence_results = {}
+        windows_to_test = [24, 48, 72]  # 1, 2, 3 days
+
+        for window_hours in windows_to_test:
+            print(f"\n{window_hours}h window analysis:")
+
+            # Calculate DVOL volatility in post-jump windows
+            post_jump_volatilities = []
+
+            for _, jump_row in jumps_df.iterrows():
+                jump_time = jump_row['timestamp']
+                jump_dvol = jump_row['dvol']
+
+                # Get DVOL values in post-jump window
+                window_end = jump_time + pd.Timedelta(hours=window_hours)
+                window_data = self.df[
+                    (self.df['timestamp'] > jump_time) &
+                    (self.df['timestamp'] <= window_end)
+                ]
+
+                if len(window_data) > 0:
+                    # Calculate volatility in this window
+                    window_vol = window_data['dvol'].std()
+                    post_jump_volatilities.append(window_vol)
+
+            # Compare to baseline volatility (non-jump periods)
+            baseline_vol = self.df[~self.df['jump_any']]['dvol'].std()
+            avg_post_jump_vol = np.mean(post_jump_volatilities) if post_jump_volatilities else baseline_vol
+
+            volatility_ratio = avg_post_jump_vol / baseline_vol
+            print(f"  Baseline volatility: {baseline_vol:.4f}")
+            print(f"  Post-jump volatility: {avg_post_jump_vol:.4f}")
+            print(f"  Volatility ratio: {volatility_ratio:.2f}x")
+
+            # Persistence criterion: volatility still >1.5x baseline
+            persistent = volatility_ratio > 1.5
+            print(f"  Significant effect: {'Yes' if persistent else 'No'}")
+
+            persistence_results[window_hours] = {
+                'volatility_ratio': volatility_ratio,
+                'persistent': persistent,
+                'avg_volatility': avg_post_jump_vol
+            }
+
+        # Export standardized jump masks based on persistence analysis
+        print(f"\n" + "=" * 60)
+        print("EXPORTING STANDARDIZED JUMP MASKS")
+        print("=" * 60)
+
+        # Create output dataframe with timestamps and jump indicators
+        jump_masks = self.df[['timestamp']].copy()
+        jump_masks['jump_indicator'] = self.df['jump_any'].astype(int)
+        jump_masks['jump_magnitude'] = self.df['jump_magnitude']
+
+        # Add jump period masks for different window definitions
+        for window_hours in windows_to_test:
+            mask_col = f'jump_period_{window_hours}h'
+            jump_masks[mask_col] = 0
+
+            # Mark jump periods (jump day + specified hours)
+            for _, jump_row in jumps_df.iterrows():
+                jump_time = jump_row['timestamp']
+                window_end = jump_time + pd.Timedelta(hours=window_hours)
+
+                mask_condition = (
+                    (jump_masks['timestamp'] >= jump_time) &
+                    (jump_masks['timestamp'] <= window_end)
+                )
+                jump_masks.loc[mask_condition, mask_col] = 1
+
+        # Export jump masks
+        masks_file = f"{output_dir}/jump_period_masks_{self.data_version}.csv"
+        jump_masks.to_csv(masks_file, index=False)
+        print(f"Jump masks exported: {masks_file}")
+
+        # Create summary statistics
+        summary_stats = {
+            'data_version': self.data_version,
+            'total_observations': len(self.df),
+            'total_jumps': len(jumps_df),
+            'jump_percentage': len(jumps_df) / len(self.df) * 100,
+            'persistence_analysis': persistence_results,
+            'recommended_windows': []
+        }
+
+        # Recommend windows based on persistence analysis
+        for window_hours in windows_to_test:
+            if persistence_results[window_hours]['persistent']:
+                summary_stats['recommended_windows'].append(window_hours)
+
+        # Export summary
+        summary_file = f"{output_dir}/jump_period_summary_{self.data_version}.json"
+        with open(summary_file, 'w') as f:
+            json.dump(summary_stats, f, indent=2, default=str)
+        print(f"Jump analysis summary: {summary_file}")
+
+        # Print key findings
+        print(f"\n" + "=" * 60)
+        print("KEY FINDINGS FOR THESIS METHODOLOGY")
+        print("=" * 60)
+
+        print(f"\nJump Characteristics:")
+        print(f"• Total jumps detected: {summary_stats['total_jumps']:,}")
+        print(f"• Jump frequency: {summary_stats['jump_percentage']:.1f}% of observations")
+        print(f"• Recommended evaluation windows: {summary_stats['recommended_windows']} hours")
+
+        print(f"\nPersistence Analysis Results:")
+        for window_hours, results in persistence_results.items():
+            status = "Significant" if results['persistent'] else "Diminished"
+            print(f"• {window_hours}h post-jump: {status} effect ({results['volatility_ratio']:.2f}x volatility)")
+
+        print(f"\nMethodological Implications:")
+        if len(summary_stats['recommended_windows']) > 0:
+            print(f"• Use {summary_stats['recommended_windows']}h windows for jump-period evaluation")
+            print(f"• Jump effects persist beyond immediate jump detection")
+        else:
+            print(f"• Jump effects diminish within 24h")
+            print(f"• Use 24h windows for conservative evaluation")
+
+        return jump_masks, summary_stats
+
+    def run_full_analysis(self, export_masks=True):
         """Execute complete jump detection pipeline."""
         self.load_data()
-        
+
         self.method1_lee_mykland()
         self.method2_sigma_threshold()
         self.method3_return_zscore()
-        
+
         self.create_composite_jump_indicator()
         self.identify_major_events()
-        
+
         self.create_jump_features()
         self.analyze_jump_impact_on_forecast()
-        
+
         self.visualize_jumps()
         self.save_jump_data()
-        
+
+        if export_masks:
+            self.analyze_jump_persistence_and_export_masks()
+
         print("\n" + "=" * 80)
         print("JUMP DETECTION ANALYSIS COMPLETE")
         print("=" * 80)
@@ -525,6 +693,42 @@ class JumpDetectionAnalysis:
         print("File: scripts/modeling/main_rolling_with_jumps.py")
         print("=" * 80)
 
-if __name__ == '__main__':
-    analyzer = JumpDetectionAnalysis()
+
+def main():
+    """Main entry point with command-line argument parsing."""
+    parser = argparse.ArgumentParser(
+        description='Jump Detection Analysis for Bitcoin DVOL'
+    )
+    parser.add_argument(
+        '--data-path',
+        type=str,
+        default='data/processed/bitcoin_lstm_features.csv',
+        help='Path to the features dataset (default: data/processed/bitcoin_lstm_features.csv)'
+    )
+    parser.add_argument(
+        '--data-version',
+        type=str,
+        default='v1.0',
+        help='Data version identifier for output files (default: v1.0)'
+    )
+    parser.add_argument(
+        '--v1-1',
+        dest='use_v1_1',
+        action='store_true',
+        help='Use v1.1 dataset (shorthand for --data-path data/archive/v1.1_2025-12-29/bitcoin_lstm_features.csv --data-version v1.1)'
+    )
+
+    args = parser.parse_args()
+
+    # Handle shorthand --v1-1 flag
+    if args.use_v1_1:
+        args.data_path = 'data/archive/v1.1_2025-12-29/bitcoin_lstm_features.csv'
+        args.data_version = 'v1.1'
+
+    # Run analysis
+    analyzer = JumpDetectionAnalysis(data_path=args.data_path, data_version=args.data_version)
     analyzer.run_full_analysis()
+
+
+if __name__ == '__main__':
+    main()

@@ -8,44 +8,72 @@ import os
 
 class ResearchBitcoinCollector:
     def __init__(self, api_token: str):
-        self.base_url = "https://beta.thebitcoinresearcher.net/v2"
+        # v1 API for volume, v2 API for other metrics
+        self.base_url_v1 = "https://api.researchbitcoin.net/v1"
+        self.base_url_v2 = "https://api.thebitcoinresearcher.net/v2"
+        self.api_token = api_token
         self.headers = {"X-API-Token": api_token}
-        
+
     def get_metric(self, metric: str, resolution: str = "h1", from_time: str = None, to_time: str = None) -> pd.DataFrame:
         # Map metrics to API endpoints
+        # transaction_volume uses v1 API with different format
         endpoint_map = {
-            "price": "price/price",
-            "spent_volume_usd": "volume/spent_volume_usd", 
-            "mvrv": "market_value_to_realized_value/mvrv",
-            "market_cap": "marketcap/market_cap",
-            "realized_cap": "realizedcap/realized_cap",
-            "net_unrealized_profit_loss": "net_unrealized_profit_loss/net_unrealized_profit_loss",
-            "txs_n": "network_statistics/txs_n"
+            "transaction_volume": ("v1", "volume", "txvol_usd_raw"),
+            "spent_volume_usd": ("v2", "volume", "spent_tx_volume_usd"),
+            "price": ("v2", "price", "price"),
+            "mvrv": ("v2", "market_value_to_realized_value", "mvrv"),
+            "market_cap": ("v2", "marketcap", "market_cap"),
+            "realized_cap": ("v2", "realizedcap", "realized_cap"),
+            "net_unrealized_profit_loss": ("v2", "net_unrealized_profit_loss", "net_unrealized_profit_loss"),
+            "txs_n": ("v2", "network_statistics", "txs_n"),
+            "spent_tx_volume_usd": ("v2", "volume", "spent_tx_volume_usd")
         }
-        
+
         if metric not in endpoint_map:
             raise ValueError(f"Unsupported metric: {metric}")
-            
-        url = f"{self.base_url}/{endpoint_map[metric]}"
-        params = {"resolution": resolution}
-        if from_time:
-            params["from_time"] = from_time
-        if to_time:
-            params["to_time"] = to_time
-        
-        response = requests.get(url, headers=self.headers, params=params)
+
+        api_version, endpoint_group, data_field = endpoint_map[metric]
+
+        if api_version == "v1":
+            # v1 API: token in query, output_format parameter
+            url = f"{self.base_url_v1}/{endpoint_group}/{data_field}"
+            params = {
+                "token": self.api_token,
+                "output_format": "csv",
+            }
+            if from_time:
+                params["date_field"] = from_time
+            # Note: v1 API doesn't seem to support 'to' parameter in same way
+            response = requests.get(url, headers={"accept": "application/json"}, params=params)
+        else:
+            # v2 API: token in header
+            url = f"{self.base_url_v2}/{endpoint_group}/{data_field}"
+            params = {"resolution": resolution, "output_format": "csv"}
+            if from_time:
+                params["date_field"] = from_time
+            if to_time:
+                params["to"] = to_time
+            response = requests.get(url, headers=self.headers, params=params)
+
         response.raise_for_status()
-        
-        # API returns CSV format by default
+
+        # API returns CSV format
         from io import StringIO
         df = pd.read_csv(StringIO(response.text))
-        df["timestamp"] = pd.to_datetime(df["time"])
-        
-        # Get the metric column (second column after 'time')
-        metric_col = df.columns[1]
-        df = df.rename(columns={metric_col: metric})
+
+        if api_version == "v1":
+            # v1 format: date column, data_field column name
+            df["timestamp"] = pd.to_datetime(df["date"])
+            # v1 uses the data_field name as column
+            df = df.rename(columns={data_field: metric})
+        else:
+            # v2 format: time column
+            df["timestamp"] = pd.to_datetime(df["time"])
+            # Get the metric column (second column after 'time')
+            metric_col = df.columns[1]
+            df = df.rename(columns={metric_col: metric})
+
         df.set_index("timestamp", inplace=True)
-        
         return df[[metric]]
     
     def collect_dataset(self, start_date: str = "2021-06-01", end_date: str = "2025-10-15", resolution: str = "h1") -> pd.DataFrame:
@@ -54,7 +82,7 @@ class ResearchBitcoinCollector:
             "market_cap": "market_cap",
             "realized_cap": "realized_cap",
             "net_unrealized_profit_loss": "net_unrealized_profit_loss",
-            "volume_usd": "spent_volume_usd", 
+            "volume_usd": "transaction_volume",  # Updated metric name
             "tx_count": "txs_n"
         }
         
@@ -86,6 +114,27 @@ class ResearchBitcoinCollector:
         
         return result
     
+    def collect_incremental(self, start_date: str = None, end_date: str = None):
+        """Collect incremental data from existing dataset end date to specified end date."""
+        # Find existing data end date
+        nvrv_path = "/home/lrud1314/PROJECTS_WORKING/THESIS 2025/data/raw/bitcoin_nvrv_hourly_20251015.csv"
+        try:
+            df_existing = pd.read_csv(nvrv_path)
+            first_col = df_existing.columns[0]
+            df_existing[first_col] = pd.to_datetime(df_existing[first_col])
+            last_date = df_existing[first_col].max()
+            if start_date is None:
+                start_date = (last_date + pd.Timedelta(hours=1)).strftime('%Y-%m-%d')
+        except:
+            start_date = "2025-10-15"
+
+        if end_date is None:
+            end_date = datetime.now().strftime('%Y-%m-%d')
+
+        print(f"Collecting incremental data from {start_date} to {end_date}")
+
+        return self.collect_dataset(start_date, end_date, "h1")
+
     def save_data(self, df: pd.DataFrame, filename: str):
         output_path = f"/home/lrud1314/PROJECTS_WORKING/THESIS 2025/data/raw/{filename}"
         os.makedirs(os.path.dirname(output_path), exist_ok=True)

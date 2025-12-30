@@ -1,0 +1,117 @@
+{
+  "1h": {
+    "HAR_RV_Train_R2": 0.9586942893357947,
+    "HAR_RV_Test_R2": 0.944576537262183,
+    "HAR_RV_Train_RMSE": 3.9093652946087696,
+    "HAR_RV_Test_RMSE": 1.9817167072094293,
+    "Naive_Train_R2": 0.9981862434916928,
+    "Naive_Test_R2": 0.9961252420870981,
+    "Naive_Train_RMSE": 0.8162727871978811,
+    "Naive_Test_RMSE": 0.5092875775720436,
+    "R2_Improvement": -0.051548704824915026,
+    "RMSE_Improvement": -1.4724291296373857,
+    "Train_Samples": 26564,
+    "Test_Samples": 11385,
+    "Coefficients": {
+      "dvol_lag_1d": 0.881794283933557,
+      "dvol_lag_7d": 0.07965343888031887,
+      "dvol_lag_30d": 0.011421976243898388,
+      "transaction_volume": 2.34182395697502e-11,
+      "network_activity": -1.3943851270822356e-05,
+      "nvrv": -0.18130207517081032,
+      "dvol_rv_spread": 0.11530730882006512
+    }
+  },
+  "6h": {
+    "HAR_RV_Train_R2": 0.9513187044007344,
+    "HAR_RV_Test_R2": 0.9368009814260998,
+    "HAR_RV_Train_RMSE": 4.243847532991764,
+    "HAR_RV_Test_RMSE": 2.116571907545471,
+    "Naive_Train_R2": 0.9877619824178653,
+    "Naive_Test_R2": 0.982495615028445,
+    "Naive_Train_RMSE": 2.120079814154602,
+    "Naive_Test_RMSE": 1.0825629378299262,
+    "R2_Improvement": -0.04569463360234516,
+    "RMSE_Improvement": -1.034008969715545,
+    "Train_Samples": 26559,
+    "Test_Samples": 11380,
+    "Coefficients": {
+      "dvol_lag_1d": 0.8818686786430228,
+      "dvol_lag_7d": 0.06928100024230992,
+      "dvol_lag_30d": 0.017778684416177637,
+      "transaction_volume": 3.489272759615858e-11,
+      "network_activity": -1.5288163963238877e-05,
+      "nvrv": -0.09260547601342427,
+      "dvol_rv_spread": 0.10553338146293897
+    }
+  },
+  "12h": {
+    "HAR_RV_Train_R2": 0.94278572036399,
+    "HAR_RV_Test_R2": 0.9257293863953333,
+    "HAR_RV_Train_RMSE": 4.60060944745309,
+    "HAR_RV_Test_RMSE": 2.294984434083802,
+    "Naive_Train_R2": 0.9761283763002657,
+    "Naive_Test_R2": 0.9696507717928519,
+    "Naive_Train_RMSE": 2.9606899078366085,
+    "Naive_Test_RMSE": 1.425663850055782,
+    "R2_Improvement": -0.04392138539751855,
+    "RMSE_Improvement": -0.8693205840280203,
+    "Train_Samples": 26553,
+    "Test_Samples": 11374,
+    "Coefficients": {
+      "dvol_lag_1d": 0.8802534730769735,
+      "dvol_lag_7d": 0.0578354504176045,
+      "dvol_lag_30d": 0.025833233447912603,
+      "transaction_volume": 3.0348216994990906e-11,
+      "network_activity": -2.6072917133236174e-05,
+      "nvrv": 0.07699342232622627,
+      "dvol_rv_spread": 0.09610753581208085
+    }
+  },
+  "24h": {
+    "HAR_RV_Train_R2": 0.9259251949802128,
+    "HAR_RV_Test_R2": 0.9021940667809651,
+    "HAR_RV_Train_RMSE": 5.234104831276943,
+    "HAR_RV_Test_RMSE": 2.6349975569167903,
+    "Naive_Train_R2": 0.955828233670652,
+    "Naive_Test_R2": 0.9502331613292425,
+    "Naive_Train_RMSE": 4.0264806993570215,
+    "Naive_Test_RMSE": 1.826419951960838,
+    "R2_Improvement": -0.04803909454827737,
+    "RMSE_Improvement": -0.8085776049559523,
+    "Train_Samples": 26541,
+    "Test_Samples": 11362,
+    "Coefficients": {
+      "dvol_lag_1d": 0.8617639117498844,
+      "dvol_lag_7d": 0.052899040771906165,
+      "dvol_lag_30d": 0.04043682317748969,
+      "transaction_volume": 3.034385936961925e-11,
+      "network_activity": -3.860166472244438e-05,
+      "nvrv": 0.34555830048466174,
+      "dvol_rv_spread": 0.08568328346024819
+    }
+  },
+  "48h": {
+    "HAR_RV_Train_R2": 0.8941866369356716,
+    "HAR_RV_Test_R2": 0.8520946574290286,
+    "HAR_RV_Train_RMSE": 6.254702480612107,
+    "HAR_RV_Test_RMSE": 3.2437517677324266,
+    "Naive_Train_R2": 0.9212834740551964,
+    "Naive_Test_R2": 0.9072034506546719,
+    "Naive_Train_RMSE": 5.372835001530714,
+    "Naive_Test_RMSE": 2.4955229268933117,
+    "R2_Improvement": -0.05510879322564333,
+    "RMSE_Improvement": -0.7482288408391149,
+    "Train_Samples": 26517,
+    "Test_Samples": 11338,
+    "Coefficients": {
+      "dvol_lag_1d": 0.8219438658866959,
+      "dvol_lag_7d": 0.04512775611235556,
+      "dvol_lag_30d": 0.06970555434822381,
+      "transaction_volume": 5.292349197771884e-11,
+      "network_activity": -5.9424281926837845e-05,
+      "nvrv": 0.7811782206033777,
+      "dvol_rv_spread": 0.07046439599729608
+    }
+  }
+}

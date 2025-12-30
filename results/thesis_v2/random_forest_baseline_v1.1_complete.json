@@ -1,0 +1,81 @@
+{
+  "model_specification": {
+    "model_type": "random_forest",
+    "target": "next_dvol_change",
+    "features": [
+      "dvol",
+      "dvol_lag_1d",
+      "dvol_lag_7d",
+      "dvol_lag_30d",
+      "transaction_volume",
+      "network_activity",
+      "nvrv",
+      "dvol_rv_spread"
+    ],
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 10,
+      "min_samples_split": 10,
+      "min_samples_leaf": 4,
+      "random_state": 42
+    },
+    "feature_importance": {
+      "dvol": 0.15938680446013528,
+      "dvol_lag_1d": 0.09589312774399708,
+      "dvol_lag_7d": 0.10180453272930992,
+      "dvol_lag_30d": 0.0653167469842757,
+      "transaction_volume": 0.047306572717242396,
+      "network_activity": 0.04324195602343684,
+      "nvrv": 0.10768166547864488,
+      "dvol_rv_spread": 0.37936859386295796
+    }
+  },
+  "data_info": {
+    "total_observations": 39471,
+    "training_samples": 27629,
+    "testing_samples": 11842,
+    "jump_periods_test": 2192
+  },
+  "performance_metrics": {
+    "training": {
+      "jump_periods": {
+        "r2": 0.22727779749633803,
+        "rmse": 1.158448158001577,
+        "mae": 0.5796244257250116,
+        "samples": 5367
+      },
+      "normal_periods": {
+        "r2": 0.045448351645023366,
+        "rmse": 0.624182075867511,
+        "mae": 0.34828335410565564,
+        "samples": 22262
+      },
+      "overall": {
+        "r2": 0.13762326000335434,
+        "rmse": 0.7580297127773158,
+        "mae": 0.39322191617381175,
+        "samples": 27629
+      }
+    },
+    "testing": {
+      "jump_periods": {
+        "r2": -0.00018804704233588154,
+        "rmse": 0.8129318830233041,
+        "mae": 0.37413496558348736,
+        "samples": 2192
+      },
+      "normal_periods": {
+        "r2": -2.46391458120776e-05,
+        "rmse": 0.4101278249723507,
+        "mae": 0.2423164065275012,
+        "samples": 9650
+      },
+      "overall": {
+        "r2": -4.433430367001279e-05,
+        "rmse": 0.5093102051391277,
+        "mae": 0.26671653162889636,
+        "samples": 11842
+      }
+    }
+  }
+}

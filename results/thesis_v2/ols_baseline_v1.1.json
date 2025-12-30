@@ -1,0 +1,66 @@
+{
+  "model_specification": {
+    "model_type": "vanilla_ols",
+    "target": "next_dvol_change",
+    "features": [
+      "dvol",
+      "dvol_lag_1d",
+      "dvol_lag_7d",
+      "dvol_lag_30d",
+      "transaction_volume",
+      "network_activity",
+      "nvrv",
+      "dvol_rv_spread"
+    ],
+    "feature_count": 8
+  },
+  "data_info": {
+    "total_observations": 37951,
+    "training_samples": 26565,
+    "testing_samples": 11386,
+    "jump_periods_test": 2114,
+    "split_date": "2024-06-12T06:00:00"
+  },
+  "performance_metrics": {
+    "training": {
+      "jump_periods": {
+        "r2": 0.001690483660132358,
+        "rmse": 1.3362284393521056,
+        "mae": 0.6217369851612216,
+        "samples": 5174
+      },
+      "normal_periods": {
+        "r2": 0.0012231012272042596,
+        "rmse": 0.6461583693384051,
+        "mae": 0.35458043485968116,
+        "samples": 21391
+      },
+      "overall": {
+        "r2": 0.0015411655310568761,
+        "rmse": 0.8270186717866844,
+        "mae": 0.40661386197280636,
+        "samples": 26565
+      }
+    },
+    "testing": {
+      "jump_periods": {
+        "r2": 0.003166210878024489,
+        "rmse": 0.8184225210512548,
+        "mae": 0.37441404147886115,
+        "samples": 2114
+      },
+      "normal_periods": {
+        "r2": -0.00228637827024758,
+        "rmse": 0.39942231108403475,
+        "mae": 0.24563483568246572,
+        "samples": 9272
+      },
+      "overall": {
+        "r2": 0.0004412950925878345,
+        "rmse": 0.5042614669097905,
+        "mae": 0.2695448340184555,
+        "samples": 11386
+      }
+    }
+  }
+}

@@ -8,11 +8,14 @@ from statsmodels.stats.diagnostic import acorr_ljungbox, het_arch, het_white
 from statsmodels.stats.stattools import durbin_watson
 from statsmodels.tsa.stattools import adfuller, kpss, acf, pacf
 from pathlib import Path
+import argparse
+import json
+from datetime import datetime
 
 class ComprehensiveModelValidation:
     """
     Comprehensive statistical validation suite for time series forecasting models.
-    
+
     Tests for:
     1. Residual stationarity
     2. Autocorrelation (model captures all temporal structure)
@@ -23,9 +26,10 @@ class ComprehensiveModelValidation:
     7. Prediction intervals validity
     8. Structural breaks in residuals
     """
-    
-    def __init__(self, model_name='lstm_rolling'):
+
+    def __init__(self, model_name='lstm_rolling', data_version='v1.0'):
         self.model_name = model_name
+        self.data_version = data_version
         self.results = {}
         
     def load_predictions(self):
@@ -91,7 +95,138 @@ class ComprehensiveModelValidation:
             'kpss_pvalue': kpss_result[1],
             'stationary': adf_result[1] < 0.05 and kpss_result[1] > 0.05
         }
-        
+
+    def test_raw_dvol_stationarity(self, data_path=None):
+        """
+        Test stationarity properties of raw DVOL time series.
+
+        Tests stationarity of:
+        - DVOL levels (raw implied volatility)
+        - DVOL changes (first differences)
+        - DVOL absolute changes (volatility jump magnitudes)
+        - DVOL percentage changes
+
+        Analysis addresses whether volatility transformations are necessary
+        for achieving stationarity in cryptocurrency volatility modeling.
+        """
+        if data_path is None:
+            data_path = f'data/archive/{self.data_version.replace("v", "")}_{self.data_version.replace("v", "").replace(".", "-")}/bitcoin_lstm_features.csv'
+            # For v1.1 path format
+            if self.data_version == 'v1.1':
+                data_path = 'data/archive/v1.1_2025-12-29/bitcoin_lstm_features.csv'
+            elif self.data_version == 'v1.0':
+                data_path = 'data/archive/v1.0_2025-10-15/bitcoin_lstm_features.csv'
+
+        print("=" * 80)
+        print("RAW DVOL STATIONARITY ANALYSIS")
+        print("=" * 80)
+        print(f"Data Version: {self.data_version}")
+        print(f"Testing stationarity properties of DVOL time series components")
+        print()
+
+        # Load DVOL data
+        try:
+            df = pd.read_csv(data_path)
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df = df.sort_values('timestamp').reset_index(drop=True)
+            print(f"Loaded {len(df):,} observations from {df['timestamp'].min()} to {df['timestamp'].max()}")
+        except Exception as e:
+            print(f"Error loading data: {e}")
+            return
+
+        # Create different DVOL specifications
+        dvol_levels = df['dvol'].dropna()
+        dvol_changes = df['dvol'].diff().dropna()
+        dvol_abs_changes = df['dvol'].diff().abs().dropna()
+        dvol_pct_changes = df['dvol'].pct_change().dropna()
+
+        specifications = {
+            'DVOL Levels': dvol_levels,
+            'DVOL Changes': dvol_changes,
+            'DVOL Absolute Changes': dvol_abs_changes,
+            'DVOL Percentage Changes': dvol_pct_changes
+        }
+
+        print("\nStationarity Test Results:")
+        print("-" * 60)
+
+        advisor_results = {}
+
+        for spec_name, series in specifications.items():
+            print(f"\n{spec_name}:")
+            print(f"  Observations: {len(series):,}")
+            print(f"  Mean: {series.mean():.4f}, Std: {series.std():.4f}")
+
+            # ADF Test
+            adf_result = adfuller(series, autolag='AIC')
+            adf_stationary = adf_result[1] < 0.05
+
+            # KPSS Test
+            try:
+                kpss_result = kpss(series, regression='c', nlags='auto')
+                kpss_stationary = kpss_result[1] > 0.05
+            except:
+                kpss_result = {'statistic': np.nan, 'pvalue': np.nan}
+                kpss_stationary = np.nan
+
+            # Overall stationarity decision
+            overall_stationary = adf_stationary and kpss_stationary if not np.isnan(kpss_stationary) else adf_stationary
+
+            print(f"  ADF: p={adf_result[1]:.4f} {'✓ STATIONARY' if adf_stationary else '✗ NON-STATIONARY'}")
+            print(f"  KPSS: p={kpss_result[1]:.4f} {'✓ STATIONARY' if kpss_stationary else '✗ NON-STATIONARY'}" if not np.isnan(kpss_result[1]) else f"  KPSS: ERROR")
+            print(f"  Overall: {'✓ STATIONARY' if overall_stationary else '✗ NON-STATIONARY'}")
+
+            advisor_results[spec_name] = {
+                'adf_pvalue': adf_result[1],
+                'adf_stationary': adf_stationary,
+                'kpss_pvalue': kpss_result[1] if not np.isnan(kpss_result[1]) else None,
+                'kpss_stationary': kpss_stationary if not np.isnan(kpss_stationary) else None,
+                'overall_stationary': overall_stationary,
+                'observations': len(series),
+                'mean': series.mean(),
+                'std': series.std()
+            }
+
+        # Store results
+        self.results['raw_dvol_stationarity'] = advisor_results
+
+        # Print key insights
+        print(f"\n" + "=" * 60)
+        print("STATIONARITY ANALYSIS RESULTS")
+        print("=" * 60)
+
+        dvol_stationary = advisor_results['DVOL Levels']['overall_stationary']
+        changes_stationary = advisor_results['DVOL Changes']['overall_stationary']
+        abs_changes_stationary = advisor_results['DVOL Absolute Changes']['overall_stationary']
+
+        print(f"\n1. DVOL Levels: {'STATIONARY' if dvol_stationary else 'NON-STATIONARY'}")
+        print(f"2. DVOL Changes: {'STATIONARY' if changes_stationary else 'NON-STATIONARY'}")
+        print(f"3. DVOL Absolute Changes: {'STATIONARY' if abs_changes_stationary else 'NON-STATIONARY'}")
+
+        print(f"\nStationarity Assessment:")
+        if dvol_stationary:
+            print(f"• Raw DVOL exhibits stationarity properties")
+        else:
+            print(f"• Raw DVOL requires transformation for stationarity")
+
+        if changes_stationary:
+            print(f"• First-differencing achieves stationarity")
+        else:
+            print(f"• First-differencing insufficient for stationarity")
+
+        print(f"\nModeling Implications:")
+        if dvol_stationary:
+            print("• Rolling window normalization may be unnecessary")
+        else:
+            print("• Rolling window normalization recommended")
+
+        if changes_stationary:
+            print("• Difference-based modeling approaches viable")
+        else:
+            print("• Advanced transformation methods may be required")
+
+        return advisor_results
+
     def test_autocorrelation(self, residuals):
         """
         Test if residuals are autocorrelated (model missed temporal patterns).
@@ -525,22 +660,41 @@ class ComprehensiveModelValidation:
         print("=" * 80)
         
     def save_results(self):
-        """Save validation results to CSV."""
-        output_dir = Path('results/csv')
+        """Save validation results to CSV and JSON."""
+        output_dir = Path('results/thesis_v2')
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Flatten results for CSV
-        flat_results = {}
+        flat_results = {'data_version': self.data_version, 'timestamp': datetime.now().isoformat()}
         for category, values in self.results.items():
             if isinstance(values, dict):
                 for key, val in values.items():
                     if not isinstance(val, (dict, pd.DataFrame)):
                         flat_results[f'{category}_{key}'] = val
-        
+
+        # Save to CSV
         df = pd.DataFrame([flat_results])
-        output_path = output_dir / f'{self.model_name}_validation_results.csv'
+        output_path = output_dir / f'{self.model_name}_validation_results_{self.data_version}.csv'
         df.to_csv(output_path, index=False)
         print(f"\nValidation results saved to: {output_path}")
+
+        # Save to JSON for better readability
+        json_path = output_dir / f'{self.model_name}_validation_results_{self.data_version}.json'
+        # Convert non-serializable objects
+        json_results = {}
+        for key, val in flat_results.items():
+            if isinstance(val, (np.integer, np.floating)):
+                json_results[key] = float(val)
+            elif isinstance(val, (pd.Timestamp, pd.Timedelta)):
+                json_results[key] = str(val)
+            elif pd.isna(val):
+                json_results[key] = None
+            else:
+                json_results[key] = val
+
+        with open(json_path, 'w') as f:
+            json.dump(json_results, f, indent=2, default=str)
+        print(f"Validation results JSON saved to: {json_path}")
 
 def create_synthetic_residuals_for_demo():
     """
@@ -568,33 +722,92 @@ def create_synthetic_residuals_for_demo():
     
     return residuals, actuals, predictions
 
-if __name__ == '__main__':
+def main():
+    """Main entry point with command-line argument parsing."""
+    parser = argparse.ArgumentParser(
+        description='Comprehensive Model Validation for Time Series Forecasting'
+    )
+    parser.add_argument(
+        '--model-name',
+        type=str,
+        default='lstm_rolling',
+        help='Model name for output files (default: lstm_rolling)'
+    )
+    parser.add_argument(
+        '--data-version',
+        type=str,
+        default='v1.0',
+        help='Data version identifier (default: v1.0)'
+    )
+    parser.add_argument(
+        '--v1-1',
+        dest='use_v1_1',
+        action='store_true',
+        help='Use v1.1 dataset (sets --data-version v1.1)'
+    )
+    parser.add_argument(
+        '--stationarity-only',
+        action='store_true',
+        help='Only run raw DVOL stationarity analysis (does not require model predictions)'
+    )
+
+    args = parser.parse_args()
+
+    # Handle shorthand --v1-1 flag
+    if args.use_v1_1:
+        args.data_version = 'v1.1'
+
     print("=" * 80)
     print("COMPREHENSIVE MODEL VALIDATION")
     print("=" * 80)
-    print("\nNote: Using synthetic residuals for demonstration.")
-    print("Re-run model training with prediction saving for full validation.")
+    print(f"Data Version: {args.data_version}")
     print()
-    
-    validator = ComprehensiveModelValidation(model_name='lstm_rolling')
-    
-    # Generate synthetic data for demo
-    residuals, actuals, predictions = create_synthetic_residuals_for_demo()
-    
-    print(f"Analyzing {len(residuals):,} test set residuals...")
-    print()
-    
-    # Run all validation tests
-    validator.test_residual_stationarity(residuals)
-    validator.test_autocorrelation(residuals)
-    validator.test_heteroskedasticity(residuals)
-    validator.test_normality(residuals)
-    validator.test_forecast_bias(residuals)
-    validator.test_structural_breaks(residuals)
-    validator.generate_diagnostic_plots(residuals, actuals, predictions)
-    
-    # Print summary
-    validator.print_summary()
-    
-    # Save results
-    validator.save_results()
+
+    validator = ComprehensiveModelValidation(model_name=args.model_name, data_version=args.data_version)
+
+    if args.stationarity_only:
+        # Only run raw DVOL stationarity analysis
+        print("Running raw DVOL stationarity analysis only...\n")
+        validator.test_raw_dvol_stationarity()
+
+        # Save stationarity results
+        output_dir = Path('results/thesis_v2')
+        output_dir.mkdir(parents=True, exist_ok=True)
+        results_path = output_dir / f'dvol_stationarity_analysis_{args.data_version}.json'
+        with open(results_path, 'w') as f:
+            json.dump({
+                'data_version': args.data_version,
+                'timestamp': datetime.now().isoformat(),
+                'results': validator.results.get('raw_dvol_stationarity', {})
+            }, f, indent=2, default=str)
+        print(f"\nStationarity analysis saved to: {results_path}")
+    else:
+        # Note: Using synthetic residuals for demonstration
+        print("Note: Using synthetic residuals for demonstration.")
+        print("Re-run model training with prediction saving for full validation.")
+        print()
+
+        # Generate synthetic data for demo
+        residuals, actuals, predictions = create_synthetic_residuals_for_demo()
+
+        print(f"Analyzing {len(residuals):,} test set residuals...")
+        print()
+
+        # Run all validation tests
+        validator.test_residual_stationarity(residuals)
+        validator.test_autocorrelation(residuals)
+        validator.test_heteroskedasticity(residuals)
+        validator.test_normality(residuals)
+        validator.test_forecast_bias(residuals)
+        validator.test_structural_breaks(residuals)
+        validator.generate_diagnostic_plots(residuals, actuals, predictions)
+
+        # Print summary
+        validator.print_summary()
+
+        # Save results
+        validator.save_results()
+
+
+if __name__ == '__main__':
+    main()
