@@ -1,0 +1,56 @@
+{
+  "model_type": "differenced_changes",
+  "config": {
+    "hidden_size": 128,
+    "num_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "epochs": 10,
+    "sequence_length": 24,
+    "patience": 5,
+    "use_multi_gpu": false
+  },
+  "use_spec_d": false,
+  "jump_aware": false,
+  "training_time_minutes": 0.49644748369852704,
+  "best_val_loss": 0.2820000903630579,
+  "timestamp": "2025-12-30T15:22:41.973840",
+  "evaluation": {
+    "RMSE": 0.4850124716758728,
+    "MAE": 0.23833680152893066,
+    "MAPE": 130941.640625,
+    "R\u00b2": -9.655952453613281e-06,
+    "Directional_Accuracy_%": 49.137931034482754
+  },
+  "evaluation_jump": null,
+  "history": {
+    "train_loss": [
+      0.6667260447061628,
+      0.666361452187147,
+      0.66618786052491,
+      0.6661479678976232,
+      0.6661150671999259,
+      0.6660680945979934
+    ],
+    "val_loss": [
+      0.2820000903630579,
+      0.2820315231845991,
+      0.2820110741046232,
+      0.2820132713110463,
+      0.28201419137216904,
+      0.2820147957250073
+    ],
+    "learning_rate": [
+      0.001,
+      0.001,
+      0.001,
+      0.001,
+      0.001,
+      0.001
+    ]
+  },
+  "model_path": "models/test_changes_best.pth",
+  "parameters": 210561,
+  "data_path": "data/processed/bitcoin_lstm_features_v1.1_complete_with_jumps.csv"
+}

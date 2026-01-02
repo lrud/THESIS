@@ -1,0 +1,33 @@
+{
+  "performance": {
+    "total_return_pct": "28.99%",
+    "annualized_return_pct": "0.17%",
+    "sharpe_ratio": "-0.884",
+    "max_drawdown_pct": "19.18%",
+    "win_rate_pct": "50.6%"
+  },
+  "trading": {
+    "total_trades": 0,
+    "avg_trade_return_pct": "0.001%",
+    "profit_factor": "1.00"
+  },
+  "risk": {
+    "volatility_pct": "0.00%",
+    "var_95_pct": "15.35%",
+    "calmar_ratio": "0.009"
+  },
+  "validation": {
+    "overfitting_detected": "False",
+    "performance_degradation_pct": "0.0%",
+    "robustness_score": "0.8/1.0"
+  },
+  "assessment": {
+    "recommendation": "\u274c NEGATIVE RETURNS - Strategy needs fundamental changes",
+    "key_insights": [
+      "\u2705 Performance consistent across training and testing",
+      "\u26a0\ufe0f Moderate drawdown: 19.2%",
+      "\ud83d\udcca Win rate near random: 50.6%",
+      "\ud83d\udcc9 Low trading activity: 0 trades (may miss opportunities)"
+    ]
+  }
+}

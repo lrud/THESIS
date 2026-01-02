@@ -177,7 +177,11 @@ def train_jump_aware(config, save_prefix='cli', results_dir='results/cli_trainin
 
     # Load data with effective batch size for multi-GPU
     print("Loading data...")
+    # Use v1.1 data with corrected dvol_rv_spread
+    data_path = 'data/processed/bitcoin_lstm_features_v1.1_complete_with_jumps.csv'
+    print(f"  Data path: {data_path}")
     train_loader, val_loader, test_loader, train_ds, val_ds, test_ds = create_jump_aware_dataloaders(
+        data_path=data_path,
         sequence_length=config['sequence_length'],
         window_size=config['window_size'],
         batch_size=config['batch_size']  # Original batch size, DataParallel handles distribution

@@ -69,6 +69,21 @@ class RollingWindowDataLoader:
         df = pd.read_csv(self.data_path)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         df = df.set_index('timestamp').sort_index()
+
+        # Define feature columns to check for NaN
+        feature_cols = [
+            'dvol_lag_1d', 'dvol_lag_7d', 'dvol_lag_30d',
+            'transaction_volume', 'network_activity',
+            'nvrv', 'dvol_rv_spread'
+        ]
+
+        # Drop rows with NaN in features or target (critical for model stability)
+        rows_before = len(df)
+        df = df.dropna(subset=feature_cols + ['dvol'])
+        rows_dropped = rows_before - len(df)
+        if rows_dropped > 0:
+            print(f"  Dropped {rows_dropped} rows with NaN in features/target ({rows_dropped/rows_before*100:.1f}%)")
+
         return df
     
     def _apply_rolling_normalization(self, df):

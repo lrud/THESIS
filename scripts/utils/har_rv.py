@@ -1,64 +1,43 @@
 """
-Backward-compatible wrapper for HAR-RV module.
+HAR-RV Module - DEPRECATED
 
-This wrapper maintains the original import path for existing code while
-delegating to the new modular implementation.
+This module has been deprecated. The HAR-RV functionality has been moved to
+deprecated/thesis_v2_har_rv/ as the analysis is now conducted through Jupyter
+notebooks in the notebooks/ directory.
 
-Deprecation Notice: This module redirects to scripts.thesis_v2.har_rv
-Please update imports to use the new location.
+For HAR-RV analysis, please use:
+  notebooks/benchmarking.ipynb - Comprehensive baseline analysis including HAR-RV
+
+Migration Guide:
+  - Old: from scripts.utils.har_rv import create_har_rv_model
+  - New: Use notebooks/benchmarking.ipynb or implement HAR-RV directly using sklearn
+
+Archived: 2025-12-30
+Reason: Jupyter-based analysis provides better reproducibility and documentation.
 """
 
 import warnings
-warnings.warn(
-    "scripts.utils.har_rv is deprecated and redirects to scripts.thesis_v2.har_rv. "
-    "Please update your imports to use: from scripts.thesis_v2.har_rv import ...",
-    DeprecationWarning,
-    stacklevel=2
-)
 
-# Import everything from the new modular location
-from scripts.thesis_v2.har_rv import (
-    # Models
-    HARRVConfig,
-    HARRV,
-    create_har_rv_model,
-    create_har_rv_differenced,
-    create_comprehensive_har_rv_model,
-    evaluate_comprehensive_har_rv,
 
-    # Diagnostics
-    calculate_statistical_diagnostics,
+class DeprecationWrapper:
+    """Wrapper that raises deprecation warning for all attribute access."""
 
-    # Baseline runners
-    run_phase1_baseline_analysis,
-    run_phase1_baseline_with_diagnostics,
-    run_random_forest_baseline,
-    run_xgboost_baseline,
-    run_har_rv_volatility_focused,
-    run_har_rv_comprehensive,
-    run_comprehensive_baseline_comparison,
+    def __init__(self, module_name):
+        self.module_name = module_name
 
-    # Visualization
-    create_baseline_comparison_table,
-    create_statistical_diagnostics_summary,
-)
+    def __getattr__(self, name):
+        warnings.warn(
+            f"HAR-RV module is deprecated. The functionality has been moved to "
+            f"deprecated/thesis_v2_har_rv/. For analysis, use notebooks/benchmarking.ipynb",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        raise ImportError(
+            f"Cannot import '{name}' from deprecated HAR-RV module. "
+            f"Use notebooks/benchmarking.ipynb for HAR-RV analysis."
+        )
 
-# Re-export for backward compatibility
-__all__ = [
-    'HARRVConfig',
-    'HARRV',
-    'create_har_rv_model',
-    'create_har_rv_differenced',
-    'create_comprehensive_har_rv_model',
-    'evaluate_comprehensive_har_rv',
-    'calculate_statistical_diagnostics',
-    'run_phase1_baseline_analysis',
-    'run_phase1_baseline_with_diagnostics',
-    'run_random_forest_baseline',
-    'run_xgboost_baseline',
-    'run_har_rv_volatility_focused',
-    'run_har_rv_comprehensive',
-    'run_comprehensive_baseline_comparison',
-    'create_baseline_comparison_table',
-    'create_statistical_diagnostics_summary',
-]
+
+# Create a fake module that raises warnings on any access
+import sys
+sys.modules[__name__] = DeprecationWrapper(__name__)

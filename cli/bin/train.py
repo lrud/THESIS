@@ -17,6 +17,7 @@ Author: Claude Code Assistant
 import argparse
 import sys
 import json
+from datetime import datetime
 from pathlib import Path
 
 # Add paths for imports
@@ -141,16 +142,20 @@ def main():
     config_overrides = build_config_from_args(args)
     config = get_config(args.model_type, **config_overrides)
 
+    # Add date-based subfolder to results directory
+    date_folder = datetime.now().strftime("%Y-%m-%d")
+    results_dir = Path(args.results_dir) / date_folder
+
     # Import and run appropriate trainer
     if args.model_type == 'jump_aware':
         from trainers.jump_aware_trainer import train_jump_aware
-        train_jump_aware(config.to_dict(), args.save_prefix, args.results_dir)
+        train_jump_aware(config.to_dict(), args.save_prefix, str(results_dir))
     elif args.model_type == 'rolling':
         from trainers.rolling_trainer import train_rolling
-        train_rolling(config.to_dict(), args.save_prefix, args.results_dir)
+        train_rolling(config.to_dict(), args.save_prefix, str(results_dir))
     elif args.model_type == 'differenced':
         from trainers.differenced_trainer import train_differenced
-        train_differenced(config.to_dict(), args.save_prefix, args.results_dir)
+        train_differenced(config.to_dict(), args.save_prefix, str(results_dir))
 
 
 if __name__ == '__main__':

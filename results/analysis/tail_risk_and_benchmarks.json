@@ -1,0 +1,86 @@
+{
+  "model_path": "/home/lrud1314/PROJECTS_WORKING/THESIS 2025/models/deep_512x7_jump_aware_best.pth",
+  "data_path": "/home/lrud1314/PROJECTS_WORKING/THESIS 2025/data/processed/bitcoin_lstm_features_v1.1_complete_with_jumps.csv",
+  "test_period": {
+    "start": "2025-02-15T10:00:00.000000000",
+    "end": "2025-12-28T23:00:00.000000000",
+    "n_samples": 7151
+  },
+  "var_backtesting": {
+    "alpha_0.05": {
+      "alpha": 0.05,
+      "confidence_level": "95%",
+      "var_value": 3.312171096801759,
+      "var_pct_of_mean": 7.4822563932911965,
+      "exceedance_count": 358,
+      "exceedance_rate": 0.05006292826178157,
+      "expected_exceedance_rate": 0.05,
+      "expected_count": 357,
+      "lr_uc_statistic": 0.0005959256894811915,
+      "reject_null": false,
+      "underestimates_risk": true
+    },
+    "alpha_0.01": {
+      "alpha": 0.01,
+      "confidence_level": "99%",
+      "var_value": 5.662857971191407,
+      "var_pct_of_mean": 12.79250196348867,
+      "exceedance_count": 72,
+      "exceedance_rate": 0.010068521885051042,
+      "expected_exceedance_rate": 0.01,
+      "expected_count": 71,
+      "lr_uc_statistic": 0.00338384528325264,
+      "reject_null": false,
+      "underestimates_risk": true
+    }
+  },
+  "tail_metrics": {
+    "p95_error": 3.312171096801759,
+    "p99_error": 5.662857971191407,
+    "p95_pct_error": 6.5893323248606075,
+    "p99_pct_error": 11.024626684099537,
+    "max_error": 18.540202941894535,
+    "max_pct_error": 31.509522334966917,
+    "worst_10_avg_error": 10.56305290222168,
+    "tail_skewness": 1.3025107045900124,
+    "jump_avg_error": 1.296331685461827,
+    "normal_avg_error": 1.1824570890829522,
+    "jump_error_ratio": 1.0963033647734224
+  },
+  "benchmark_comparison": {
+    "lstm": {
+      "mae": 1.2033019844346442,
+      "rmse": 1.6720205388168197,
+      "r2": 0.9317550689815441
+    },
+    "persistence": {
+      "mae": 5.41443154803524,
+      "rmse": 6.456979211224938,
+      "r2": -0.017761362356524257,
+      "mae_improvement_vs_lstm": 77.7760236922509,
+      "rmse_improvement_vs_lstm": 74.1052203496312
+    },
+    "mean": {
+      "mae": 24.42326522627188,
+      "rmse": 25.247987461909133,
+      "r2": -14.561115097215376,
+      "mae_improvement_vs_lstm": 95.07313222336764,
+      "rmse_improvement_vs_lstm": 93.37760864568178
+    },
+    "random_walk": {
+      "mae": 5.602616643148794,
+      "rmse": 6.726074078077974,
+      "r2": -0.10435951036440594,
+      "mae_improvement_vs_lstm": 78.52250009098675,
+      "rmse_improvement_vs_lstm": 75.14121136033322
+    }
+  },
+  "summary": {
+    "lstm_r2": 0.9317550689815441,
+    "lstm_mae": 1.2033019844346442,
+    "beats_persistence": true,
+    "beats_mean": true,
+    "underestimates_tail_risk_5pct": true,
+    "underestimates_tail_risk_1pct": true
+  }
+}
