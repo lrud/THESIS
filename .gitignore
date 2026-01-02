@@ -29,9 +29,9 @@ share/python-wheels/
 MANIFEST
 
 # Data files - PROPRIETARY (from paid ResearchBitcoin API), DO NOT COMMIT
-data/raw/*.csv
-data/processed/*.csv
-data/features/*.csv
+data/
+# Model files - too large for git, DO NOT COMMIT
+models/
 
 # Jupyter Notebook
 .ipynb_checkpoints
