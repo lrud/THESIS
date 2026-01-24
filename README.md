@@ -270,16 +270,6 @@ pip3 install --pre torch torchvision torchaudio --index-url https://download.pyt
 pip3 install -r requirements-pytorch.txt
 ```
 
-### Browser Automation (Optional)
-```bash
-# For web browsing and data collection capabilities
-plugin marketplace add browserbase/agent-browse
-plugin install browser-automation@browser-tools
-
-# Set Anthropic API key for web browsing
-export ANTHROPIC_API_KEY="your-api-key"
-```
-
 ### Hardware Requirements
 - **Recommended**: Dual AMD Radeon RX 7900 XT GPUs (20GB VRAM each)
 - **Minimum**: Single GPU with 8GB+ VRAM
@@ -448,7 +438,17 @@ export ANTHROPIC_API_KEY="your-api-key"
 
 Key literature supporting feature selection and methodology documented in project documentation.
 
-- Yang & Fantazzini (2022): NVRV vs. MVRV comparison
-- Corsi (2009): HAR-RV model specification
-- Lee & Mykland (2008): Jump detection methodology
-- Fleming et al. (2001): Volatility forecasting fundamentals
+**Volatility Modeling and HAR-RV:**
+- Corsi, F. (2009). A Simple Approximate Long-Memory Model of Realized Volatility. *Journal of Financial Econometrics*, 7(2), 174-196.
+- Fleming, J., Ostdiek, B., & Whaley, R. E. (2001). Predicting Stock Market Volatility: A New Measure. *Journal of Futures Markets*, 21(3), 267-287.
+
+**Jump Detection:**
+- Lee, S. S., & Mykland, P. A. (2008). Jumps in Financial Markets: A New Nonparametric Test and Jump Dynamics. *Review of Financial Studies*, 21(6), 2543-2577.
+
+**On-Chain Metrics:**
+- Yang, K., & Fantazzini, D. (2022). NVRV vs. MVRV Comparison for Cryptocurrency Analysis.
+
+**Machine Learning for Volatility Forecasting:**
+- Vrontos, I. et al. (2021). Forecasting VIX with Machine Learning. *Journal of Forecasting*.
+- Balaneji, B., & Maringer, D. (2022). Implied Volatility Forecasting with XGBoost. *Quantitative Finance*.
+- Zhang, L., & Hua, L. (2025). High-Frequency Financial Data Analysis: A Survey. *Mathematics*, 13(3), 347.
