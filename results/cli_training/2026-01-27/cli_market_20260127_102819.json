@@ -1,0 +1,45 @@
+{
+  "model_type": "market",
+  "config": {
+    "model_type": "market",
+    "hidden_size": 128,
+    "num_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "epochs": 1,
+    "patience": 10,
+    "sequence_length": 24,
+    "window_size": 720,
+    "early_stop_patience": 10,
+    "use_multi_gpu": false
+  },
+  "training_time_minutes": 0.09082595904668173,
+  "best_val_loss": 1.5904993560647458,
+  "timestamp": "2026-01-27T10:28:19.026523",
+  "evaluation": {
+    "overall": {
+      "MSE": 13.685469627380371,
+      "RMSE": 3.699387788772583,
+      "MAE": 2.8126442432403564,
+      "MAPE": 6.121285438537598,
+      "R\u00b2": 0.6659260392189026,
+      "Direction_%": 51.559658693523566
+    },
+    "jump_samples": 0,
+    "normal_samples": 7150
+  },
+  "history": {
+    "train_loss": [
+      1.7530553227022934
+    ],
+    "val_loss": [
+      1.5904993560647458
+    ],
+    "learning_rate": [
+      0.001
+    ]
+  },
+  "model_path": "models/cli_market_best.pth",
+  "parameters": 209025
+}

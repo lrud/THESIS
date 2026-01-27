@@ -46,7 +46,7 @@ Examples:
 
     # Model type (required)
     parser.add_argument('model_type',
-                       choices=['jump_aware', 'rolling', 'differenced'],
+                       choices=['jump_aware', 'rolling', 'differenced', 'market', 'market_jumps', 'market_lags'],
                        help='Model type to train')
 
     # Configuration file option
@@ -156,6 +156,9 @@ def main():
     elif args.model_type == 'differenced':
         from trainers.differenced_trainer import train_differenced
         train_differenced(config.to_dict(), args.save_prefix, str(results_dir))
+    elif args.model_type in ['market', 'market_jumps', 'market_lags']:
+        from trainers.unified_trainer import train_unified
+        train_unified(args.model_type, config.to_dict(), args.save_prefix, str(results_dir))
 
 
 if __name__ == '__main__':

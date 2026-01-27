@@ -1,0 +1,45 @@
+{
+  "model_type": "market_lags",
+  "config": {
+    "model_type": "market_lags",
+    "hidden_size": 128,
+    "num_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "epochs": 1,
+    "patience": 10,
+    "sequence_length": 24,
+    "window_size": 720,
+    "early_stop_patience": 10,
+    "use_multi_gpu": false
+  },
+  "training_time_minutes": 0.08878152370452881,
+  "best_val_loss": 1.5637806966343695,
+  "timestamp": "2026-01-27T10:29:31.709026",
+  "evaluation": {
+    "overall": {
+      "MSE": 13.315935134887695,
+      "RMSE": 3.6491005420684814,
+      "MAE": 2.781926393508911,
+      "MAPE": 6.061657428741455,
+      "R\u00b2": 0.674946665763855,
+      "Direction_%": 51.951321863197656
+    },
+    "jump_samples": 0,
+    "normal_samples": 7150
+  },
+  "history": {
+    "train_loss": [
+      1.7577625774106886
+    ],
+    "val_loss": [
+      1.5637806966343695
+    ],
+    "learning_rate": [
+      0.001
+    ]
+  },
+  "model_path": "models/cli_market_lags_best.pth",
+  "parameters": 210561
+}

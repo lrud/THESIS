@@ -108,7 +108,80 @@ class DifferencedConfig(ModelConfig):
         'sequence_length': 24,
         'forecast_horizon': 24,
         'early_stop_patience': 15,
-        'use_multi_gpu': False  # Enable multi-GPU training with DataParallel
+        'use_multi_gpu': False
+    }
+
+    def __init__(self, **overrides):
+        config = self.DEFAULT.copy()
+        config.update(overrides)
+        super().__init__(config)
+
+
+class MarketConfig(ModelConfig):
+    """Configuration for market LSTM models."""
+
+    DEFAULT = {
+        'model_type': 'market',
+        'hidden_size': 128,
+        'num_layers': 2,
+        'dropout': 0.3,
+        'learning_rate': 0.001,
+        'batch_size': 32,
+        'epochs': 50,
+        'patience': 10,
+        'sequence_length': 24,
+        'window_size': 720,
+        'early_stop_patience': 10,
+        'use_multi_gpu': False
+    }
+
+    def __init__(self, **overrides):
+        config = self.DEFAULT.copy()
+        config.update(overrides)
+        super().__init__(config)
+
+
+class MarketJumpsConfig(ModelConfig):
+    """Configuration for market + jumps LSTM models."""
+
+    DEFAULT = {
+        'model_type': 'market_jumps',
+        'hidden_size': 128,
+        'num_layers': 2,
+        'dropout': 0.3,
+        'learning_rate': 0.001,
+        'batch_size': 32,
+        'epochs': 50,
+        'patience': 10,
+        'sequence_length': 24,
+        'window_size': 720,
+        'weight_jump_periods': 2.0,
+        'early_stop_patience': 10,
+        'use_multi_gpu': False
+    }
+
+    def __init__(self, **overrides):
+        config = self.DEFAULT.copy()
+        config.update(overrides)
+        super().__init__(config)
+
+
+class MarketLagsConfig(ModelConfig):
+    """Configuration for market + lags LSTM models."""
+
+    DEFAULT = {
+        'model_type': 'market_lags',
+        'hidden_size': 128,
+        'num_layers': 2,
+        'dropout': 0.3,
+        'learning_rate': 0.001,
+        'batch_size': 32,
+        'epochs': 50,
+        'patience': 10,
+        'sequence_length': 24,
+        'window_size': 720,
+        'early_stop_patience': 10,
+        'use_multi_gpu': False
     }
 
     def __init__(self, **overrides):
@@ -122,7 +195,10 @@ def get_config(model_type: str, **overrides) -> ModelConfig:
     config_classes = {
         'jump_aware': JumpAwareConfig,
         'rolling': RollingConfig,
-        'differenced': DifferencedConfig
+        'differenced': DifferencedConfig,
+        'market': MarketConfig,
+        'market_jumps': MarketJumpsConfig,
+        'market_lags': MarketLagsConfig
     }
 
     if model_type not in config_classes:

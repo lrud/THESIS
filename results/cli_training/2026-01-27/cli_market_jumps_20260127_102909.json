@@ -1,0 +1,62 @@
+{
+  "model_type": "market_jumps",
+  "config": {
+    "model_type": "market_jumps",
+    "hidden_size": 128,
+    "num_layers": 2,
+    "dropout": 0.3,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "epochs": 1,
+    "patience": 10,
+    "sequence_length": 24,
+    "window_size": 720,
+    "weight_jump_periods": 2.0,
+    "early_stop_patience": 10,
+    "use_multi_gpu": false
+  },
+  "training_time_minutes": 0.0896512230237325,
+  "best_val_loss": 1.8743451954963217,
+  "timestamp": "2026-01-27T10:29:09.212767",
+  "evaluation": {
+    "overall": {
+      "MSE": 13.543119430541992,
+      "RMSE": 3.680097818374634,
+      "MAE": 2.8527660369873047,
+      "MAPE": 6.255199909210205,
+      "R\u00b2": 0.6694009304046631,
+      "Direction_%": 51.88138201147014
+    },
+    "normal": {
+      "MSE": 13.407307624816895,
+      "RMSE": 3.6615991592407227,
+      "MAE": 2.849201202392578,
+      "MAPE": 6.2592291831970215,
+      "R\u00b2": 0.6708856821060181,
+      "Direction_%": 51.763698630136986
+    },
+    "jump": {
+      "MSE": 14.149138450622559,
+      "RMSE": 3.7615339756011963,
+      "MAE": 2.868675947189331,
+      "MAPE": 6.237221717834473,
+      "R\u00b2": 0.6627404093742371,
+      "Direction_%": 50.68807339449541
+    },
+    "jump_samples": 1309,
+    "normal_samples": 5841
+  },
+  "history": {
+    "train_loss": [
+      2.178071220217057
+    ],
+    "val_loss": [
+      1.8743451954963217
+    ],
+    "learning_rate": [
+      0.001
+    ]
+  },
+  "model_path": "models/cli_market_jumps_best.pth",
+  "parameters": 211073
+}
