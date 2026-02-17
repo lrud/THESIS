@@ -1,0 +1,57 @@
+{
+  "model_type": "market_lags",
+  "config": {
+    "model_type": "market_lags",
+    "hidden_size": 128,
+    "num_layers": 2,
+    "dropout": 0.5,
+    "learning_rate": 5e-05,
+    "batch_size": 32,
+    "epochs": 5,
+    "patience": 10,
+    "sequence_length": 24,
+    "window_size": 720,
+    "early_stop_patience": 10,
+    "use_multi_gpu": true
+  },
+  "training_time_minutes": 0.8758903662363688,
+  "best_val_loss": 1.3963743108989937,
+  "timestamp": "2026-01-28T10:15:39.534108",
+  "evaluation": {
+    "overall": {
+      "MSE": 5.211855411529541,
+      "RMSE": 2.2829487323760986,
+      "MAE": 1.6968965530395508,
+      "MAPE": 3.7263360023498535,
+      "R\u00b2": 0.8727741837501526,
+      "Direction_%": 49.41949923066163
+    },
+    "jump_samples": 0,
+    "normal_samples": 7150
+  },
+  "history": {
+    "train_loss": [
+      1.8695780764563812,
+      2.8590099045089765,
+      6.036626051659365,
+      5.432690209258384,
+      6.52660229507018
+    ],
+    "val_loss": [
+      1.3963743108989937,
+      7.318844308012298,
+      10.146990755173777,
+      12.927505719142832,
+      21.144583070983312
+    ],
+    "learning_rate": [
+      2.5e-05,
+      2.5e-05,
+      2.5e-05,
+      2.5e-05,
+      2.5e-05
+    ]
+  },
+  "model_path": "models/test_stability_market_lags_best.pth",
+  "parameters": 210561
+}

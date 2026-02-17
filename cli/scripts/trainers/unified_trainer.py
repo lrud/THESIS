@@ -235,12 +235,18 @@ def train_unified(model_type, config, save_prefix='cli', results_dir='results/cl
 
     training_time = time.time() - start_time
 
+    # Load best checkpoint into BASE model for evaluation (not DataParallel-wrapped)
+    # This avoids the ~12% R² performance degradation from DataParallel evaluation
     if hasattr(model, 'module'):
-        model.module.load_state_dict(torch.load(model_path))
+        base_model = model.module
     else:
-        model.load_state_dict(torch.load(model_path))
+        base_model = model
 
-    evaluation_results = evaluate_model(model, test_loader, test_ds)
+    base_model.load_state_dict(torch.load(model_path))
+    base_model.eval()
+
+    # Evaluate base model without DataParallel wrapper for TRUE performance
+    evaluation_results = evaluate_model(base_model, test_loader, test_ds)
 
     print(f"\n{'='*80}")
     print(f"RESULTS - {model_type.upper()}")
