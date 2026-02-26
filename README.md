@@ -4,11 +4,38 @@
 
 Develop an LSTM neural network model to forecast Bitcoin implied volatility (DVOL) using on-chain metrics and historical volatility patterns, validated through statistical analysis.
 
-## Current Status (January 28, 2026)
+## Current Status (February 26, 2026)
 
-**Phase:** Fixed evaluation complete - DataParallel wrapper degradation resolved. LSTM performance now competitive with linear/tree models.
+**Phase:** Multi-window normalization analysis complete - 72-hour window optimal for level prediction. Dataset v1.6 released with standard Lee-Mykland (2008) jump detection.
+
+> **NOTE:** LSTM model results documented below are from v1.0/v1.1 datasets (historical research). LSTM models have NOT been retrained on v1.6_final dataset. For current state-of-the-art results, see the Linear/Tree Models section below (multi-window analysis, February 2026).
 
 ### Recent Developments
+
+**Multi-Window Normalization Analysis (February 26, 2026):**
+- **Critical finding:** 72-hour (3-day) normalization window is **optimal for R²** - achieves 0.9940 (XGB_NoLag_Jumps)
+- **Directional accuracy insight:** HAR_RV achieves **best directional accuracy** across ALL windows (50.3-50.8%), despite lowest R²
+- **Paradox explained:** High R² (99%+) due to DVOL autocorrelation (~0.999) makes level prediction trivial; directional prediction fundamentally difficult (~50%)
+- **Dataset:** v1.6_final with 41,055 hourly records (up from 39,472 in v1.1)
+
+**Dataset v1.6 Release (February 25, 2026):**
+- **Standard Lee-Mykland (2008) implementation:** 236 jumps (0.57%) using academically rigorous Gumbel threshold (β* = 9.21)
+- **Previous method correction:** Old "7,278 jumps (19.2%)" used data-driven threshold, not standard Lee-Mykland formula
+- **Clean dataset:** 19 columns, removed composite/alternative jump indicators
+- **100% data coverage:** No gaps, 41,055 hourly records (2021-04-23 to 2025-12-28)
+
+**Classification Models Analysis (February 26, 2026):**
+- **18 models tested** across 4 window sizes (72h, 168h, 336h, 720h)
+- **Null results:** No statistical significance at 5% level - only 2 models marginally significant (p < 0.10)
+- **Best model:** LDA_HAR (54.29% accuracy) but F1 = 0.0000 (degenerate - predicts majority class)
+- **Conclusion:** Hourly DVOL direction is **fundamentally unpredictable**
+
+**Directional Accuracy Methodology Correction (February 26, 2026):**
+- **Formula corrected** to **Pesaran-Timmermann (1992)** industry standard
+- **Impact:** Corrected values ~4-5 percentage points lower than previously reported
+- **Reference:** Pesaran, M. & Timmermann, A. (1992). *Journal of Business & Economic Statistics*, 10(4), 461-465
+
+---
 
 **Fixed Evaluation (January 28, 2026):**
 - **Critical discovery:** DataParallel wrapper during evaluation degraded LSTM R² by 13.3%
@@ -61,9 +88,20 @@ Develop an LSTM neural network model to forecast Bitcoin implied volatility (DVO
 ### Completed Work
 
 **Data Collection & Preprocessing:**
-- 39,472 hourly samples (April 23, 2021 09:00 - December 28, 2025 23:00)
+
+**Current Dataset (v1.6_final - February 2026):**
+- **41,055 hourly samples** (April 23, 2021 09:00 - December 28, 2025 23:00)
+- **19 columns** - removed composite/alternative jump indicators
+- **236 Lee-Mykland jumps** (0.57%) using standard Gumbel threshold (β* = 9.21)
+- **100% data coverage** - no gaps
+
+**Previous Datasets (LSTM models trained on these):**
+- v1.1: 39,472 samples (extended from v1.0)
+- v1.0: 37,951 samples
+
+**Core Features:**
 - 9 core predictors engineered and validated (100% complete)
-- 11 jump detection features (indicator, magnitude, timing, clustering)
+- Jump detection features (indicator, magnitude, timing, clustering)
 - Statistical analysis confirmed LSTM suitability
 - No multicollinearity issues (all VIF < 5)
 
@@ -144,7 +182,10 @@ Fixed evaluation reveals true LSTM performance - market_lags (7 features, no jum
   - Preserves feature-target relationships
   - Achieves genuine forecasting skill (R²=0.201 without jump features)
 - **Solution 2:** Jump-aware modeling with weighted loss (Original Approach)
-  - Detected 7,278 jumps (19.2% of data) using Lee-Mykland test
+
+  > **NOTE:** The original LSTM research used a **data-driven jump detection method** that detected 7,278 jumps (19.2%). The current v1.6 dataset uses the **standard Lee-Mykland (2008)** implementation with 236 jumps (0.57%). See "Dataset v1.6 Release" above for details.
+
+  - Detected 7,278 jumps (19.2% of data) using data-driven threshold
   - Validated against 6 major crypto crises (FTX, Luna, China ban)
   - Weighted loss (2x for jumps) ensures balanced performance
   - **Original Result:** R² improvement from 0.201 to 0.800 with jump features
@@ -194,6 +235,11 @@ Fixed evaluation reveals true LSTM performance - market_lags (7 features, no jum
 - **Contribution:** First systematic comparison of LSTM vs linear/tree models on identical 720h rolling normalization framework
 
 **Thesis Contributions:**
+
+- **Multi-window normalization analysis (February 2026):** 72-hour window optimal for R² prediction
+- **Standard Lee-Mykland (2008) implementation verification:** Academically rigorous jump detection
+- **Pesaran-Timmermann (1992) directional accuracy correction:** Industry-standard formula
+- **Random walk behavior documentation:** DVOL autocorrelation (~0.999) explains high R² / low DA paradox
 - Trivial solution detection framework (metric equivalence + directional accuracy)
 - Rolling normalization for regime-shifting financial data
 - Unified model comparison framework (17 models: linear, tree, LSTM)
@@ -215,15 +261,19 @@ Fixed evaluation reveals true LSTM performance - market_lags (7 features, no jum
 
 **Academic Contributions:**
 
+- **Multi-window normalization analysis:** 72-hour (3-day) window optimal for R² level prediction (February 2026)
+- **Standard Lee-Mykland (2008) implementation:** Academically rigorous jump detection with 236 jumps (0.57%) vs previous data-driven method
+- **Pesaran-Timmermann (1992) directional accuracy:** Industry-standard formula for market direction forecasting
+- **Random walk behavior documentation:** DVOL autocorrelation (~0.999) explains high R² / low directional accuracy paradox
 - **DataParallel evaluation artifact:** Identified and fixed 13.3% R² degradation in PyTorch multi-GPU LSTM evaluation
-- Trivial solution detection framework (metric equivalence + directional accuracy)
-- Rolling normalization for regime-shifting financial data
+- **Trivial solution detection framework:** Metric equivalence + directional accuracy for detecting illusory performance
+- **Rolling normalization for regime-shifting financial data**
 - **Unified model comparison framework:** 17 models (linear, tree, LSTM) on identical preprocessing
 - **LSTM competitive performance:** With fixed evaluation, LSTM (R²=0.9287) within 2% of best linear/tree models
 - **Jump feature redundancy:** Explicit jump features provide NO value (and harm LSTM performance)
-- VaR backtesting framework for financial model validation
-- Signal-to-noise analysis explaining R² vs directional accuracy contradiction
-- NVRV non-stationarity validation with ADF testing
+- **VaR backtesting framework** for financial model validation
+- **Signal-to-noise analysis** explaining R² vs directional accuracy contradiction
+- **NVRV non-stationarity validation** with ADF testing
 
 ## Model Specification
 
@@ -268,7 +318,9 @@ Fixed evaluation reveals true LSTM performance - market_lags (7 features, no jum
 - **Regularization:** 0.5 dropout, 1e-4 L2 penalty
 - **Hardware:** 2x AMD Radeon RX 7900 XT GPUs (ROCm 7.0)
 - **Training:** Early stopping (patience=15), learning rate 1e-4, ReduceLROnPlateau
-- **Jump-Aware Loss:** 2× weighting for jump periods (7,278 jumps, 19.2% of data)
+- **Jump-Aware Loss:** 2× weighting for jump periods
+
+  > **NOTE:** Original LSTM models used data-driven jump detection (7,278 jumps, 19.2%). Current v1.6 dataset uses standard Lee-Mykland (2008) with 236 jumps (0.57%). LSTM models have NOT been retrained on v1.6.
 - **Output:** Single value (DVOL forecast)
 
 **Architecture Scaling Results (v1.1 + Unified Framework - Fixed Evaluation):**
@@ -391,7 +443,7 @@ pip3 install -r requirements-pytorch.txt
 | **Normalization** | 720-hour rolling z-score | Adapts to regime changes (mean shift: 69→48) |
 | **Normalization Scope** | Features AND target | Aligns feature space with prediction space |
 | **Target Variable** | `dvol_norm.shift(-1)` | 1-hour ahead forecast |
-| **Data Source** | bitcoin_lstm_features_v1.1_complete_with_jumps.csv | 39,472 samples (Apr 2021 - Dec 2025) |
+| **Data Source** | v1.6_final: bitcoin_lstm_features_v1.6_final.csv (41,055 samples) for linear/tree; v1.1 for LSTM (historical) | 41,055 (v1.6) / 39,472 (v1.1) |
 
 **Why Normalize the Target?**
 When features are normalized (mean=0, std=1) but the target has regime-dependent mean, linear models learn a fixed intercept that fails when the regime shifts. By normalizing both features AND target, we ensure:
@@ -482,17 +534,86 @@ When features are normalized (mean=0, std=1) but the target has regime-dependent
    - **Suitable for:** Risk management, option pricing, volatility level estimation
    - **NOT suitable for:** Directional trading, market timing strategies
 
+---
+
+### Multi-Window Normalization Analysis (February 2026)
+
+**Overview:** Completed comprehensive comparison of 31 regression and classification models across 4 normalization window sizes (72h, 168h, 336h, 720h) using v1.6_final dataset (41,055 samples).
+
+**Key Finding:** 72-hour (3-day) window is **optimal for level prediction (R²)**, while HAR_RV wins for **directional accuracy across ALL windows**.
+
+**Multi-Window Regression Summary:**
+
+| Window | Best R² Model | Best R² | Best R² RMSE | Best Dir% Model | Best Dir% |
+|--------|---------------|---------|--------------|-----------------|-----------|
+| **72h (3d)** | XGB_NoLag_Jumps | **0.9940** | 0.53 | HAR_RV | 50.3% |
+| 168h (7d) | XGB_Lags_Jumps | 0.9926 | 0.59 | HAR_RV | **50.8%** |
+| 336h (14d) | RF_Lags_Jumps | 0.9914 | 0.64 | HAR_RV | 50.7% |
+| 720h (30d) | RF_NoLag_Jumps | 0.9911 | 0.65 | HAR_RV | 50.3% |
+
+**Critical Insight:** Despite having the **lowest R² values**, HAR_RV consistently achieves the **best directional accuracy** across all window sizes:
+
+| Window | HAR_RV R² | HAR_RV RMSE | HAR_RV Dir% | Best Model R² | Best Model Dir% |
+|--------|-----------|-------------|-------------|---------------|----------------|
+| 72h | 0.9592 | 1.38 | **50.3%** | 0.9940 | 49.3% |
+| 168h | 0.9511 | 1.51 | **50.8%** | 0.9926 | 48.4% |
+| 336h | 0.9441 | 1.62 | **50.7%** | 0.9914 | 48.6% |
+| 720h | 0.9389 | 1.69 | **50.3%** | 0.9911 | 49.0% |
+
+**Interpretation:** Complex models (XGBoost, RF) overfit to levels (high R²) but fail to capture direction. Simple HAR_RV sacrifices level accuracy for better directional signals.
+
+**Recommendation:** Use **72-hour normalization window** for all new model training.
+
+---
+
+### Classification Models Analysis (February 2026)
+
+**Overview:** Executed comprehensive classification analysis with 18 models across 4 window sizes, directly predicting DVOL direction (up/down) rather than level regression.
+
+**Dataset:** v1.6_final (41,055 samples, 60/20/20 split, 24,633 train / 8,211 val / 8,211 test)
+
+**Key Findings:**
+
+1. **No Statistical Significance at 5% Level** - Only 2 models show marginal significance (p < 0.10): RF_NoLag, XGB_NoLag
+2. **Best Model: LDA_HAR (Degenerate)** - Test Accuracy: 54.29%, but F1 = 0.0000 (predicts majority class almost exclusively)
+3. **Multi-Window Results** - Best: LDA_NoLags_Jumps at 72h (Acc=54.62%), but minimal difference between windows (<1 pp)
+4. **Critical Insight** - **Hourly DVOL direction is fundamentally unpredictable**
+
+**Top Classification Models:**
+
+| Model | Type | Test Accuracy | F1 | PT-stat | p-value | Significance |
+|-------|------|---------------|----|----|----|----|
+| LDA_HAR | Linear | 54.29% | 0.0000 | -0.04 | 0.9677 | |
+| LDA_NoLags | Linear | 53.97% | 0.0857 | 0.11 | 0.9129 | |
+| XGB_NoLag | Tree | 52.96% | 0.3557 | 1.82 | 0.0686 | * |
+| RF_NoLag | Tree | 51.39% | 0.4610 | 1.66 | 0.0973 | * |
+
+**Baselines:** Random guess = 50.00%, Majority class = 45.19%
+
+**Conclusion:** Direct classification provides no advantage over regression + directional threshold conversion. Best models cannot statistically beat random guessing.
+
+---
+
 ## Documentation
 
 **Key Documents:**
 
 - `CLAUDE.md` - Claude AI assistant guide and project context
+- `docs/journal/2026-02-26.md` - Multi-window normalization analysis, classification results, Pesaran-Timmermann correction
+- `docs/journal/2026-02-25.md` - Dataset evolution (v1.1 → v1.6), Lee-Mykland correction history
 - `docs/research/session_logs/THESIS_V2_SESSION_CONSOLIDATION_2026-01-02.md` - Complete research session log with v1.1 validated results, LSTM architecture optimization, and VaR backtesting
 - `docs/QUICK_REFERENCE.md` - Performance summary and thesis defense points
 - `scripts/thesis_v2/har_rv/` - Modular HAR-RV analysis package with statistical diagnostics
 - `scripts/utils/README.md` - Consolidated utilities implementation guide
 
 **Session Log Highlights:**
+
+**February 26, 2026 - Multi-Window Normalization Analysis:**
+- **72-hour window optimal** for R² prediction (XGB_NoLag_Jumps: 0.9940)
+- **HAR_RV wins for directional accuracy** across ALL windows (50.3-50.8%)
+- **Classification null results:** No statistical significance at 5% level
+- **Directional accuracy corrected** to Pesaran-Timmermann (1992) industry standard
+- **Dataset v1.6 release:** 41,055 samples, standard Lee-Mykland (236 jumps, 0.57%)
 
 **January 28, 2026 - Fixed Evaluation Complete:**
 - **Critical discovery:** DataParallel wrapper during evaluation degraded LSTM R² by 13.3%
@@ -551,7 +672,9 @@ When features are normalized (mean=0, std=1) but the target has regime-dependent
 │   └── har_rv_v1.0.py           # Original monolithic HAR-RV (2,480 lines)
 ├── data/
 │   ├── processed/
-│   │   └── bitcoin_lstm_features_v1.1_complete_with_jumps.csv (39,472 samples, 20 features)
+│   │   └── bitcoin_lstm_features_v1.6_final.csv (41,055 samples, 19 features - RECOMMENDED)
+│   │   ├── bitcoin_lstm_features_v1.1_complete_with_jumps.csv (39,472 samples - historical)
+│   │   └── bitcoin_lstm_features_v1.0_*.csv (37,951 samples - deprecated)
 │   └── raw/ (DVOL, active addresses, NVRV, options snapshots)
 ├── docs/ (documentation files)
 ├── models/ (LSTM model checkpoints, including large-scale models)
@@ -572,6 +695,9 @@ Key literature supporting feature selection and methodology documented in projec
 
 **Jump Detection:**
 - Lee, S. S., & Mykland, P. A. (2008). Jumps in Financial Markets: A New Nonparametric Test and Jump Dynamics. *Review of Financial Studies*, 21(6), 2543-2577.
+
+**Directional Accuracy:**
+- Pesaran, M. & Timmermann, A. (1992). A Simple Nonparametric Test of Predictive Performance. *Journal of Business & Economic Statistics*, 10(4), 461-465.
 
 **On-Chain Metrics:**
 - Yang, K., & Fantazzini, D. (2022). NVRV vs. MVRV Comparison for Cryptocurrency Analysis.
