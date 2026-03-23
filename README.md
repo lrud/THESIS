@@ -1,5 +1,9 @@
 # LSTM Forecasting of Bitcoin Implied Volatility (DVOL)
 
+## Abstract
+
+This thesis develops and validates a Long Short-Term Memory (LSTM) neural network model for forecasting Bitcoin implied volatility (DVOL), the Deribit 30-day volatility index. Using a unified framework of 17 models (13 linear/tree baselines + 4 LSTM variants), we demonstrate that LSTM models achieve competitive performance (R² = 0.9287) when properly evaluated, narrowing the gap to linear/tree models to only 2%. Key findings include: (1) lagged volatility features alone achieve near-optimal performance, (2) explicit jump detection features provide minimal or negative impact across all model types, and (3) all models achieve approximately 50% directional accuracy, confirming that hourly DVOL direction is fundamentally unpredictable despite high level-prediction accuracy. The research contributes a systematic comparison framework, identification of a DataParallel evaluation artifact in multi-GPU PyTorch training, and validation of the standard Lee-Mykland (2008) jump detection methodology.
+
 ## Objective
 
 Develop an LSTM neural network model to forecast Bitcoin implied volatility (DVOL) using on-chain metrics and historical volatility patterns, validated through statistical analysis.
@@ -603,7 +607,7 @@ When features are normalized (mean=0, std=1) but the target has regime-dependent
 - `docs/journal/2026-02-25.md` - Dataset evolution (v1.1 → v1.6), Lee-Mykland correction history
 - `docs/research/session_logs/THESIS_V2_SESSION_CONSOLIDATION_2026-01-02.md` - Complete research session log with v1.1 validated results, LSTM architecture optimization, and VaR backtesting
 - `docs/QUICK_REFERENCE.md` - Performance summary and thesis defense points
-- `scripts/thesis_v2/har_rv/` - Modular HAR-RV analysis package with statistical diagnostics
+- `deprecated/thesis_v2_har_rv/` - Modular HAR-RV analysis package with statistical diagnostics (archived)
 - `scripts/utils/README.md` - Consolidated utilities implementation guide
 
 **Session Log Highlights:**
@@ -640,49 +644,195 @@ When features are normalized (mean=0, std=1) but the target has regime-dependent
 ## Repository Structure
 
 ```
-├── cli/                          # Modern training interface
-│   ├── bin/train.py             # Main CLI entry point (supports 6 model types)
+THESIS 2025/
+│
+├── cli/                              # Production training interface
+│   ├── bin/
+│   │   ├── train.py                  # Main CLI entry point (6 model types)
+│   │   └── train_with_monitoring.py  # Training with logging
 │   ├── config/
-│   │   ├── config.py            # Configuration management system
-│   │   └── feature_configs.py   # Unified feature set configurations
-│   └── scripts/trainers/        # Modular trainer implementations
-│       ├── jump_aware_trainer.py
-│       ├── rolling_trainer.py   # DEPRECATED - historical comparison only
-│       ├── differenced_trainer.py # DEPRECATED - trivial solution
-│       └── unified_trainer.py   # Single trainer for market/market_jumps/market_lags
-├── scripts/                     # Analysis and modeling components
-│   ├── modeling/                # LSTM neural network components
-│   │   ├── data_loader_unified.py  # Unified dataset for all LSTM models
-│   │   └── lstm_dvol.py         # Core LSTM model architecture
-│   ├── thesis_v2/har_rv/        # Modular HAR-RV analysis package
-│   │   ├── models.py            # Core HAR-RV model classes
-│   │   ├── diagnostics.py       # Statistical testing framework
-│   │   ├── baseline.py          # Baseline model runners
-│   │   ├── visualization.py     # Plotting and visualization
-│   │   ├── cli.py               # Command-line interface
-│   │   └── __init__.py          # Package exports
-│   ├── utils/                   # Consolidated shared utilities
-│   │   ├── metrics.py           # Unified evaluation metrics
-│   │   ├── har_rv.py            # Backward-compatible wrapper
-│   │   └── __init__.py
-│   ├── analysis/                # Statistical validation frameworks
-│   ├── benchmarking/            # Benchmark utilities
-│   └── data_collection/         # Data acquisition pipelines
-├── deprecated/                  # Archived superseded implementations
-│   └── har_rv_v1.0.py           # Original monolithic HAR-RV (2,480 lines)
-├── data/
-│   ├── processed/
-│   │   └── bitcoin_lstm_features_v1.6_final.csv (41,055 samples, 19 features - RECOMMENDED)
-│   │   ├── bitcoin_lstm_features_v1.1_complete_with_jumps.csv (39,472 samples - historical)
-│   │   └── bitcoin_lstm_features_v1.0_*.csv (37,951 samples - deprecated)
-│   └── raw/ (DVOL, active addresses, NVRV, options snapshots)
-├── docs/ (documentation files)
-├── models/ (LSTM model checkpoints, including large-scale models)
-└── results/
-    ├── cli_training/            # CLI training results with JSON metadata
-    │   └── 2026-01-27/           # Latest unified framework results
-    ├── csv/ (analysis outputs, metrics, diagnostics)
-    └── visualizations/ (diagnostic plots)
+│   │   ├── config.py                 # Configuration management
+│   │   └── feature_configs.py        # Feature set definitions
+│   └── scripts/trainers/             # Modular trainer implementations
+│       ├── unified_trainer.py        # market, market_jumps, market_lags
+│       ├── jump_aware_trainer.py     # Jump-aware LSTM
+│       ├── changes_trainer.py        # Changes model
+│       ├── rolling_trainer.py        # DEPRECATED - historical comparison
+│       └── differenced_trainer.py    # DEPRECATED - trivial solution
+│
+├── scripts/                          # Analysis and modeling code
+│   ├── analysis/
+│   │   ├── production/               # Reusable analysis scripts
+│   │   │   ├── comprehensive_model_validation.py
+│   │   │   ├── jump_detection_analysis.py
+│   │   │   ├── run_multi_window_comparison.py
+│   │   │   ├── run_multi_window_dir_acc.py
+│   │   │   ├── standard_lee_mykland.py
+│   │   │   ├── tail_risk_and_benchmarks.py
+│   │   │   └── unified_model_comparison.py
+│   │   └── one_off/                  # Investigation/data prep scripts
+│   │       ├── analyze_da_by_horizon.py
+│   │       ├── create_v15_clean.py
+│   │       ├── create_v16_final.py
+│   │       ├── fix_methodology_issues.py
+│   │       ├── investigate_lag_gaps.py
+│   │       ├── run_kappa_analysis.py
+│   │       ├── run_statistical_investigation.py
+│   │       └── update_to_standard_lm.py
+│   │
+│   ├── benchmarking/                 # Benchmark scripts and utilities
+│   │   ├── compare_all_models.py
+│   │   ├── main_har_rv.py
+│   │   ├── main_naive_baselines.py
+│   │   ├── models/naive_models.py
+│   │   └── utils/
+│   │
+│   ├── data_collection/              # Data acquisition pipelines
+│   │   ├── researchbitcoin_data.py   # ResearchBitcoin API client
+│   │   ├── fill_gaps.py
+│   │   ├── pull_incremental_data.py
+│   │   └── deribit_options_scraper.py
+│   │
+│   ├── debug/                        # Debug scripts
+│   │   ├── debug_real_lstm_predictions.py
+│   │   └── test_merged_jump_lstm_data.py
+│   │
+│   ├── modeling/                     # Core LSTM model code
+│   │   ├── model.py                  # LSTM architecture
+│   │   ├── evaluator.py              # Evaluation utilities
+│   │   ├── data_loader_unified.py    # Unified dataset class
+│   │   ├── data_loader_jump_aware.py
+│   │   ├── data_loader_rolling.py
+│   │   └── data_loader_changes.py
+│   │
+│   ├── shell/                        # Shell scripts
+│   │   ├── retrain_single_gpu_lr_matched.sh
+│   │   ├── retrain_single_gpu_parallel.sh
+│   │   └── test_single_gpu_quick.sh
+│   │
+│   ├── utils/                        # Shared utilities
+│   │   ├── metrics.py                # Unified evaluation metrics
+│   │   ├── har_rv.py                 # HAR-RV implementation
+│   │   └── README.md
+│   │
+│   └── visualization/                # Visualization scripts
+│       ├── generate_comparison_table.py
+│       └── twitter_thread_visualizations.py
+│
+├── notebooks/                        # Jupyter notebooks
+│   ├── benchmarking.ipynb            # Model benchmarking (v1.6 dataset)
+│   ├── manual_stats.ipynb            # Manual statistical analysis
+│   ├── unified_model_comparison.ipynb # 17-model comparison (v1.6)
+│   └── unified_model_comparison_classification.ipynb
+│
+├── results/                          # All experimental results
+│   ├── cli_training/                 # Training results by date
+│   │   ├── 2025-12-30/
+│   │   ├── 2025-12-31/
+│   │   ├── 2026-01-02/
+│   │   ├── 2026-01-27/
+│   │   └── 2026-01-28/              # Fixed evaluation results
+│   │
+│   ├── analysis/                     # Analysis JSON/CSV results
+│   │   ├── classification_results.json
+│   │   ├── window_comparison_results.json
+│   │   ├── lee_mykland_standard_comparison.csv
+│   │   └── ...
+│   │
+│   ├── visualizations/               # All plots and figures
+│   │   ├── analysis/
+│   │   ├── classification/
+│   │   ├── comparison/
+│   │   ├── diagnostics/
+│   │   ├── har_rv/
+│   │   ├── jumps/
+│   │   ├── lstm/
+│   │   ├── lstm_jump_crisis/
+│   │   ├── naive/
+│   │   └── twitter_thread/
+│   │
+│   ├── thesis_v2/                    # Historical thesis v2 results
+│   │   ├── autocorrelation_decay_v1.1.json
+│   │   ├── baseline_comparison_summary_v1.1.json
+│   │   └── visualizations/
+│   │
+│   ├── csv/                          # CSV exports
+│   │   ├── coefficients/
+│   │   ├── diagnostics/
+│   │   └── metrics/
+│   │
+│   └── archive/                      # Archived results
+│       ├── benchmarking/             # From scripts/benchmarking/results/
+│       ├── single_gpu_lr_matched_20260127/
+│       └── single_gpu_retraining_20260127/
+│
+├── models/                           # Model checkpoints (gitignored)
+│   ├── final/                        # Production models
+│   │   ├── market_lags_512x7.pth    # Best: R² = 0.9287
+│   │   ├── jump_aware_512x7.pth     # R² = 0.7986
+│   │   ├── market_jumps_512x7.pth   # R² = 0.6100
+│   │   ├── market_512x7.pth         # R² = 0.6135
+│   │   ├── market_512x3.pth         # R² = 0.5940
+│   │   └── market_256x3.pth         # R² = 0.6145
+│   ├── historical/                   # Legacy models
+│   │   └── rolling_512x7.pth        # R² = 0.201 (deprecated baseline)
+│   └── archive/                      # Experimental/superseded models
+│       ├── experimental/             # One-off experiments
+│       └── superseded/               # Earlier versions
+│
+├── deprecated/                       # Archived code
+│   ├── modeling/                     # Old training scripts
+│   │   ├── main_jump_aware.py
+│   │   ├── main_rolling.py
+│   │   ├── main_differenced.py
+│   │   ├── src_core_model.py        # Moved from src/core/
+│   │   └── src_core_evaluator.py
+│   ├── thesis_v2_har_rv/             # Old HAR-RV package
+│   │   ├── models.py
+│   │   ├── diagnostics.py
+│   │   ├── baseline.py
+│   │   └── visualization.py
+│   └── har_rv_v1.0.py               # Original monolithic HAR-RV
+│
+├── docs/                             # Documentation
+│   ├── data/
+│   │   └── DATA_VERSIONING.md
+│   ├── implementation/
+│   │   ├── CLI_TRAINING.md
+│   │   ├── code_consolidation_changes.md
+│   │   └── final_code_consolidation_summary.md
+│   ├── journal/                      # Research session logs
+│   │   ├── 2026-02-25.md            # Dataset evolution, Lee-Mykland
+│   │   └── 2026-02-26.md            # Multi-window, classification
+│   ├── methodology/
+│   │   ├── STATISTICAL_ANALYSIS_COMPLETE.md
+│   │   ├── JUMP_DETECTION_SUMMARY.md
+│   │   └── MATHEMATICAL_REFERENCE.tex
+│   ├── project/
+│   ├── research/
+│   │   ├── THESIS_V2_IMPLEMENTATION_PLAN.md
+│   │   ├── session_logs/
+│   │   ├── model_comparison_methodology_resolution_2026-01-22.md
+│   │   ├── single_gpu_retraining_plan.md
+│   │   └── stationarity_cross_model_comparison_research.md
+│   └── results/
+│       ├── QUICK_REFERENCE.md
+│       └── ultra_large_model_results.md
+│
+├── data/                             # Data files (gitignored)
+│   ├── processed/                    # Feature-engineered datasets
+│   │   ├── bitcoin_lstm_features_v1.6_final.csv  # RECOMMENDED (41,055 samples)
+│   │   ├── bitcoin_lstm_features_v1.1_complete_with_jumps.csv
+│   │   └── bitcoin_lstm_features_v1.0_*.csv
+│   ├── raw/                          # Raw data from APIs
+│   ├── archive/                      # Old dataset versions
+│   └── deribit/                      # Deribit-specific data
+│
+└── deribit_data_collector/           # Data collection tools
+    ├── btc_volatility_collector.py   # Custom volatility collector
+    ├── historical_options_collector.py
+    ├── deribit_data.py               # Deribit API wrapper
+    └── examples/
 ```
 
 ## References

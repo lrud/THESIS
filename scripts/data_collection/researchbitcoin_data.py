@@ -10,15 +10,15 @@ class ResearchBitcoinCollector:
     def __init__(self, api_token: str):
         # v1 API for volume, v2 API for other metrics
         self.base_url_v1 = "https://api.researchbitcoin.net/v1"
-        self.base_url_v2 = "https://api.thebitcoinresearcher.net/v2"
+        self.base_url_v2 = "https://api.researchbitcoin.net/v2"
         self.api_token = api_token
         self.headers = {"X-API-Token": api_token}
 
     def get_metric(self, metric: str, resolution: str = "h1", from_time: str = None, to_time: str = None) -> pd.DataFrame:
         # Map metrics to API endpoints
-        # transaction_volume uses v1 API with different format
+        # All use v2 API with from_time/to_time parameters
         endpoint_map = {
-            "transaction_volume": ("v1", "volume", "txvol_usd_raw"),
+            "transaction_volume": ("v2", "volume", "spent_tx_outputs_count"),
             "spent_volume_usd": ("v2", "volume", "spent_tx_volume_usd"),
             "price": ("v2", "price", "price"),
             "mvrv": ("v2", "market_value_to_realized_value", "mvrv"),
@@ -34,26 +34,14 @@ class ResearchBitcoinCollector:
 
         api_version, endpoint_group, data_field = endpoint_map[metric]
 
-        if api_version == "v1":
-            # v1 API: token in query, output_format parameter
-            url = f"{self.base_url_v1}/{endpoint_group}/{data_field}"
-            params = {
-                "token": self.api_token,
-                "output_format": "csv",
-            }
-            if from_time:
-                params["date_field"] = from_time
-            # Note: v1 API doesn't seem to support 'to' parameter in same way
-            response = requests.get(url, headers={"accept": "application/json"}, params=params)
-        else:
-            # v2 API: token in header
-            url = f"{self.base_url_v2}/{endpoint_group}/{data_field}"
-            params = {"resolution": resolution, "output_format": "csv"}
-            if from_time:
-                params["date_field"] = from_time
-            if to_time:
-                params["to"] = to_time
-            response = requests.get(url, headers=self.headers, params=params)
+        # All endpoints now use v2 API with from_time/to_time parameters
+        url = f"{self.base_url_v2}/{endpoint_group}/{data_field}"
+        params = {"resolution": resolution, "output_format": "csv"}
+        if from_time:
+            params["from_time"] = from_time
+        if to_time:
+            params["to_time"] = to_time
+        response = requests.get(url, headers=self.headers, params=params)
 
         response.raise_for_status()
 
@@ -61,17 +49,11 @@ class ResearchBitcoinCollector:
         from io import StringIO
         df = pd.read_csv(StringIO(response.text))
 
-        if api_version == "v1":
-            # v1 format: date column, data_field column name
-            df["timestamp"] = pd.to_datetime(df["date"])
-            # v1 uses the data_field name as column
-            df = df.rename(columns={data_field: metric})
-        else:
-            # v2 format: time column
-            df["timestamp"] = pd.to_datetime(df["time"])
-            # Get the metric column (second column after 'time')
-            metric_col = df.columns[1]
-            df = df.rename(columns={metric_col: metric})
+        # v2 format: time column
+        df["timestamp"] = pd.to_datetime(df["time"])
+        # Get the metric column (second column after 'time')
+        metric_col = df.columns[1]
+        df = df.rename(columns={metric_col: metric})
 
         df.set_index("timestamp", inplace=True)
         return df[[metric]]
@@ -83,7 +65,7 @@ class ResearchBitcoinCollector:
             "realized_cap": "realized_cap",
             "net_unrealized_profit_loss": "net_unrealized_profit_loss",
             "volume_usd": "transaction_volume",  # Updated metric name
-            "tx_count": "txs_n"
+            "network_activity": "txs_n"
         }
         
         dfs = []

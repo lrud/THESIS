@@ -62,3 +62,6 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# IDE/Tool configs
+.mcp.json
