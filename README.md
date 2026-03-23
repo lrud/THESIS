@@ -2,7 +2,17 @@
 
 ## Abstract
 
-This thesis develops and validates a Long Short-Term Memory (LSTM) neural network model for forecasting Bitcoin implied volatility (DVOL), the Deribit 30-day volatility index. Using a unified framework of 17 models (13 linear/tree baselines + 4 LSTM variants), we demonstrate that LSTM models achieve competitive performance (R² = 0.9287) when properly evaluated, narrowing the gap to linear/tree models to only 2%. Key findings include: (1) lagged volatility features alone achieve near-optimal performance, (2) explicit jump detection features provide minimal or negative impact across all model types, and (3) all models achieve approximately 50% directional accuracy, confirming that hourly DVOL direction is fundamentally unpredictable despite high level-prediction accuracy. The research contributes a systematic comparison framework, identification of a DataParallel evaluation artifact in multi-GPU PyTorch training, and validation of the standard Lee-Mykland (2008) jump detection methodology.
+This thesis develops and validates a Long Short-Term Memory (LSTM) neural network model for forecasting Bitcoin implied volatility (DVOL), the Deribit 30-day volatility index. Using a unified framework of 17 models (13 linear/tree baselines + 4 LSTM variants), we demonstrate that LSTM models achieve competitive performance (R² = 0.9287) when properly evaluated, narrowing the gap to linear/tree models to only 2%.
+
+**Key Findings:**
+- Lagged volatility features alone achieve near-optimal performance (R² = 0.9287 with 7 features)
+- Explicit jump detection features provide minimal or negative impact across all model types
+- All models achieve approximately 50% directional accuracy, confirming that hourly DVOL direction is fundamentally unpredictable despite high level-prediction accuracy
+
+**Contributions:**
+- Systematic 17-model comparison framework with unified preprocessing
+- Identification of a DataParallel evaluation artifact in multi-GPU PyTorch training (13.3% R² degradation)
+- Validation of the standard Lee-Mykland (2008) jump detection methodology
 
 ## Objective
 
