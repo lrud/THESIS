@@ -30,8 +30,16 @@ MANIFEST
 
 # Data files - PROPRIETARY (from paid ResearchBitcoin API), DO NOT COMMIT
 data/
+
 # Model files - too large for git, DO NOT COMMIT
-models/
+models/*.pth
+models/**/*.pth
+# But track the README
+!models/README.md
+
+# Nested virtual environments
+deribit_data_collector/venv/
+**/venv/
 
 # Jupyter Notebook
 .ipynb_checkpoints
