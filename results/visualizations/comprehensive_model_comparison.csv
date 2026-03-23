@@ -1,0 +1,55 @@
+Section,Model,Type/Features/Window,Metric1,Metric2,Metric3,Metric4,Metric5
+REGRESSION - Level Forecast,,,,,,,
+Model,Features,R2,RMSE,Dir%,vs Random,
+,XGB_NoLag_Jumps,8,0.9940,0.53,49.3%,-0.7pp
+,XGB_Lags_Jumps,11,0.9936,0.55,49.1%,-0.9pp
+,RF_NoLag_Jumps,8,0.9935,0.55,49.5%,-0.5pp
+,RF_Lags_Jumps,11,0.9935,0.55,49.3%,-0.7pp
+,RF_NoLag,4,0.9927,0.58,49.7%,-0.3pp
+,XGB_Lags,7,0.9927,0.58,49.5%,-0.5pp
+,XGB_NoLag,4,0.9927,0.58,49.5%,-0.5pp
+,RF_Lags,7,0.9927,0.59,49.4%,-0.6pp
+
+REGRESSION - Best Directional,,,,,,
+Model,Window,R2,RMSE,Dir%,vs Random,
+,Model,Window,R2,RMSE,Dir%,vs Random
+,HAR_RV,168h,0.9511,1.51,50.8%,+0.8pp
+,HAR_RV,336h,0.9441,1.62,50.7%,+0.7pp
+,HAR_RV,72h,0.9592,1.38,50.3%,+0.3pp
+
+CLASSIFICATION - Binary Direction,,,,,,
+Model,Type,Accuracy,F1,PT-stat,Sig,
+,CLASSIFICATION - Binary Direction,,,,,
+,Model,Type,Accuracy,F1,PT-stat,Sig
+,LDA_HAR,Linear,54.29%,0.0000,-0.04,
+,LDA_NoLags,Linear,53.97%,0.0857,0.11,
+,LDA_WithLags_Jumps,Linear,53.84%,0.1359,0.35,
+,LDA_NoLags_Jumps,Linear,53.79%,0.1009,-0.06,
+,XGB_NoLag,Tree,52.96%,0.3557,1.82,*
+,XGB_NoLag_Jumps,Tree,52.70%,0.3621,1.53,
+,XGB_Lags,Tree,52.19%,0.3562,0.63,
+
+MULTI-WINDOW CLASSIFICATION,,,,,,
+Window,Best Model,Accuracy,F1,Avg Acc,vs Random,
+,,,,,,
+,MULTI-WINDOW CLASSIFICATION,,,,,
+,Window,Best Model,Accuracy,F1,Avg Acc,vs Random
+,72h (3d),LDA_NoLags_Jumps,54.62%,0.0886,53.87%,+3.87pp
+
+Key Insights,,,,,,
+1. REGRESSION: High R2 (99%+) from DVOL autocorrelation (~0.999),,,,,,
+"   Best: XGB_NoLag_Jumps R2=0.9940, but Dir%=49.3% (worse than random!)",,,,,,
+,,,,,,
+2. REGRESSION: HAR_RV wins for directional accuracy,,,,,,
+   Best: HAR_RV@168h with Dir%=50.8% (+0.8pp vs random),,,,,,
+,,,,,,
+3. CLASSIFICATION: No statistical significance at 5% level,,,,,,
+"   Only 2 models marginally significant (p<0.10): RF_NoLag, XGB_NoLag",,,,,,
+,,,,,,
+4. CLASSIFICATION: LDA models are degenerate,,,,,,
+   High accuracy (54%) but F1~0 (predicts majority class only),,,,,,
+,,,,,,
+5. CRITICAL: Hourly DVOL direction is fundamentally unpredictable,,,,,,
+   Best models cannot statistically beat random guessing,,,,,,
+,,,,,,
+6. WINDOW: 72h optimal for R2; minimal impact on classification,,,,,,

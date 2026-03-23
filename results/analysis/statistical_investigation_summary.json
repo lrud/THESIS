@@ -1,0 +1,342 @@
+{
+  "date": "2026-02-17",
+  "n_observations": 39472,
+  "date_range": {
+    "start": "2021-04-23",
+    "end": "2025-12-28"
+  },
+  "dvol_statistics": {
+    "mean": 61.9783517430077,
+    "std": 18.632165519819615,
+    "skewness": 0.830520771560423,
+    "kurtosis": 0.50636862132446
+  },
+  "normality_tests": {
+    "jarque_bera_pvalue": 0.0,
+    "shapiro_pvalue": 1.2405435621789333e-39,
+    "reject_normality": true
+  },
+  "tail_analysis": {
+    "hill_estimator": 0.1747435271844697,
+    "students_t_df": 2.1
+  },
+  "stationarity": {
+    "raw_dvol": {
+      "adf_pvalue": 0.007175663728459447,
+      "kpss_pvalue": 0.01,
+      "is_stationary": true,
+      "conflict": true
+    },
+    "rolling_normalized": {
+      "72h": {
+        "features_tested": 8,
+        "features_stationary": 8,
+        "percentage_stationary": 100.0,
+        "results_by_feature": {
+          "dvol": {
+            "adf_stat": -24.652714986226066,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.07838555821702191,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_1d": {
+            "adf_stat": -24.66780163254547,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.07026172321653999,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_7d": {
+            "adf_stat": -24.77273451446391,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.0892165999698578,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_30d": {
+            "adf_stat": -24.82812666237162,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.09906487566858753,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "transaction_volume": {
+            "adf_stat": -28.905102213899113,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.03175138142845684,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "network_activity": {
+            "adf_stat": -27.684616403211987,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.017536791635487617,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "nvrv": {
+            "adf_stat": -28.926933620705555,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.08530882612657438,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_rv_spread": {
+            "adf_stat": -24.858197378962554,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.02068449788031054,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          }
+        }
+      },
+      "168h": {
+        "features_tested": 8,
+        "features_stationary": 8,
+        "percentage_stationary": 100.0,
+        "results_by_feature": {
+          "dvol": {
+            "adf_stat": -17.901575239002778,
+            "adf_pvalue": 2.952025548627655e-30,
+            "kpss_stat": 0.09790492061208785,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_1d": {
+            "adf_stat": -17.92880930613012,
+            "adf_pvalue": 2.8882389427875552e-30,
+            "kpss_stat": 0.09362433787867033,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_7d": {
+            "adf_stat": -18.008041973685188,
+            "adf_pvalue": 2.7203872101125698e-30,
+            "kpss_stat": 0.10795752078469922,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_30d": {
+            "adf_stat": -18.06714637527269,
+            "adf_pvalue": 2.6108662438568128e-30,
+            "kpss_stat": 0.14608660241241408,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "transaction_volume": {
+            "adf_stat": -24.946023849136214,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.019416510341876966,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "network_activity": {
+            "adf_stat": -23.56681987102699,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.047332111429232646,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "nvrv": {
+            "adf_stat": -18.71670761247277,
+            "adf_pvalue": 2.0335395263864576e-30,
+            "kpss_stat": 0.10811049293320778,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_rv_spread": {
+            "adf_stat": -17.66594050391072,
+            "adf_pvalue": 3.663651017771682e-30,
+            "kpss_stat": 0.028959041106950648,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          }
+        }
+      },
+      "336h": {
+        "features_tested": 8,
+        "features_stationary": 8,
+        "percentage_stationary": 100.0,
+        "results_by_feature": {
+          "dvol": {
+            "adf_stat": -13.413543188905793,
+            "adf_pvalue": 4.326503509759972e-25,
+            "kpss_stat": 0.10619677538234544,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_1d": {
+            "adf_stat": -13.414837585961372,
+            "adf_pvalue": 4.302484466767783e-25,
+            "kpss_stat": 0.1049970711955037,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_7d": {
+            "adf_stat": -13.567518226836384,
+            "adf_pvalue": 2.24772361677863e-25,
+            "kpss_stat": 0.11542410009571719,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_30d": {
+            "adf_stat": -13.59293718275759,
+            "adf_pvalue": 2.0203270470600622e-25,
+            "kpss_stat": 0.1672852001323971,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "transaction_volume": {
+            "adf_stat": -23.038589343066796,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.04280236385744955,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "network_activity": {
+            "adf_stat": -20.847082637985334,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.06127053804845236,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "nvrv": {
+            "adf_stat": -12.533010759006435,
+            "adf_pvalue": 2.4053895280973845e-23,
+            "kpss_stat": 0.20852672378229384,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_rv_spread": {
+            "adf_stat": -13.65332223141105,
+            "adf_pvalue": 1.5707357423637784e-25,
+            "kpss_stat": 0.052650503174384376,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          }
+        }
+      },
+      "720h": {
+        "features_tested": 8,
+        "features_stationary": 8,
+        "percentage_stationary": 100.0,
+        "results_by_feature": {
+          "dvol": {
+            "adf_stat": -10.415397993809188,
+            "adf_pvalue": 1.7598291982798274e-18,
+            "kpss_stat": 0.1398400631725054,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_1d": {
+            "adf_stat": -10.501519641048178,
+            "adf_pvalue": 1.0809266105845758e-18,
+            "kpss_stat": 0.1393517601705992,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_7d": {
+            "adf_stat": -10.679156296122645,
+            "adf_pvalue": 3.9815425687508136e-19,
+            "kpss_stat": 0.1467170039189649,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "dvol_lag_30d": {
+            "adf_stat": -10.763644218641241,
+            "adf_pvalue": 2.4841854953083538e-19,
+            "kpss_stat": 0.17480106719926247,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "transaction_volume": {
+            "adf_stat": -20.823078074459705,
+            "adf_pvalue": 0.0,
+            "kpss_stat": 0.1598614273437044,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "network_activity": {
+            "adf_stat": -18.661271894161413,
+            "adf_pvalue": 2.047551571593367e-30,
+            "kpss_stat": 0.12564448738013634,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          },
+          "nvrv": {
+            "adf_stat": -8.700965952599288,
+            "adf_pvalue": 3.8103662249410776e-14,
+            "kpss_stat": 0.3903469516313618,
+            "kpss_pvalue": 0.08131596912441302,
+            "stationary": true
+          },
+          "dvol_rv_spread": {
+            "adf_stat": -9.75110473346011,
+            "adf_pvalue": 8.011644362947365e-17,
+            "kpss_stat": 0.08776272622904306,
+            "kpss_pvalue": 0.1,
+            "stationary": true
+          }
+        }
+      }
+    },
+    "best_window_hours": 72,
+    "best_window_days": 3,
+    "best_window_stationary_pct": 100.0
+  },
+  "volatility_clustering": {
+    "arch_lm_pvalue": 0.0,
+    "has_arch_effects": true
+  },
+  "leverage_effect": {
+    "lag_1_corr": 0.18532063223248277,
+    "sign_bias_pvalue": 5.5249013242890616e-05,
+    "has_asymmetry": true
+  },
+  "regime_changes": {
+    "n_change_points": 9,
+    "rolling_variance_cv": 1.5867084872947126
+  },
+  "long_memory": {
+    "hurst_exponent": 0.19552228017858328
+  },
+  "recommendations": [
+    {
+      "category": "Distribution",
+      "finding": "Student t fit: df = 2.10 (very heavy tails)",
+      "recommendation": "Quantile regression or robust loss functions recommended",
+      "priority": "HIGH"
+    },
+    {
+      "category": "Stationarity",
+      "finding": "ADF/KPSS conflict (ADF p=7.18e-03, KPSS p=1.00e-02)",
+      "recommendation": "Rolling normalization required",
+      "priority": "HIGH"
+    },
+    {
+      "category": "Volatility",
+      "finding": "Significant volatility clustering (ARCH effects)",
+      "recommendation": "GARCH-style modeling or regime-switching approaches",
+      "priority": "HIGH"
+    },
+    {
+      "category": "Asymmetry",
+      "finding": "Significant asymmetry: neg/pos ratio = 0.55",
+      "recommendation": "Implement asymmetric response (GJR-GARCH style)",
+      "priority": "MEDIUM"
+    },
+    {
+      "category": "Regimes",
+      "finding": "High variance variability (CV = 1.59)",
+      "recommendation": "Regime-switching models or adaptive window sizing",
+      "priority": "MEDIUM"
+    },
+    {
+      "category": "Memory",
+      "finding": "Mean-reversion detected (H = 0.1955)",
+      "recommendation": "Ornstein-Uhlenbeck or mean-reverting models",
+      "priority": "LOW"
+    }
+  ]
+}
