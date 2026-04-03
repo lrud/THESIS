@@ -9,7 +9,6 @@ Enables direct comparison to XGBoost Spec D benchmarks.
 Target: Δdvol = dvol_{t+1} - dvol_t (stationary by construction)
 Features: 7 core features or Spec D features (9 features)
 
-Author: Claude Code Assistant
 Date: December 30, 2025
 Purpose: Option C - Train both LSTM variants (levels + changes)
 """

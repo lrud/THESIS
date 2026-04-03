@@ -11,7 +11,6 @@ Reference implementation based on:
 - linuskohl GitHub implementation
 - highfrequency R package documentation
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

@@ -5,7 +5,6 @@ Investigate Lag Feature Missing Values in v1.4 Dataset
 This script investigates the unexpected missing values in dvol_lag_30d and dvol_lag_7d
 to determine the root cause.
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

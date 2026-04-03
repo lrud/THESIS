@@ -4,7 +4,6 @@ Consolidated evaluation metrics for all model types.
 This module provides unified metrics calculation functions that can be used
 across LSTM models, HAR-RV models, and other forecasting approaches.
 
-Author: Claude Code Assistant
 """
 
 import numpy as np

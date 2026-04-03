@@ -6,7 +6,6 @@ Configuration Management for LSTM Training
 Centralized configuration definitions for different model types.
 Academic and modular - each model type has its own configuration.
 
-Author: Claude Code Assistant
 """
 
 import json

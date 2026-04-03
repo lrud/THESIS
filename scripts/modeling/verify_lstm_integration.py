@@ -5,7 +5,6 @@ Verify Ultra-Large LSTM Integration
 This script verifies that the ultra-large LSTM model (R² = 0.9076)
 is properly integrated into the enhanced volatility trading system.
 
-Author: Claude AI Assistant
 Date: November 2025
 """
 

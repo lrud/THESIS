@@ -7,7 +7,6 @@ This script addresses three critical issues identified in the dataset:
 2. DVOL-RV spread - FIX: Use academic best practices (realized volatility from squared returns)
 3. NVRV verification - Verify calculation by re-fetching market_cap and realized_cap
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

@@ -5,7 +5,6 @@ Differenced LSTM Trainer
 
 Trainer for differenced LSTM models.
 
-Author: Claude Code Assistant
 """
 
 import sys

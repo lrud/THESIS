@@ -11,7 +11,6 @@ Usage:
     python cli/bin/train.py differenced --epochs 150 --dropout 0.4
     python cli/bin/train.py jump_aware --config configs/experiment.json
 
-Author: Claude Code Assistant
 """
 
 import argparse

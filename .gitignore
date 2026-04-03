@@ -63,6 +63,9 @@ logs/
 *.tmp
 *.temp
 
+# AI assistant config (private)
+CLAUDE.md
+
 # Research planning notes (private)
 THESIS/
 

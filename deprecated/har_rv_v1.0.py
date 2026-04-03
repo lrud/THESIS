@@ -7,7 +7,6 @@ standard and differenced target variables.
 Reference: Corsi (2009)
 Model: RV_t+h = β₀ + β_d·RV_t + β_w·RV_t^(week) + β_m·RV_t^(month) + ε_t
 
-Author: Claude Code Assistant
 """
 
 import numpy as np

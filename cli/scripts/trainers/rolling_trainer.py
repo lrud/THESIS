@@ -5,7 +5,6 @@ Rolling Window LSTM Trainer
 
 Trainer for rolling window LSTM models.
 
-Author: Claude Code Assistant
 """
 
 import sys

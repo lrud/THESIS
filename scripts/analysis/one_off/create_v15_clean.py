@@ -6,7 +6,6 @@ This script creates v1.5 of the dataset by removing the composite jump indicator
 (jump_any, jump_all) that lack academic justification, and recalculating dependent
 features using only the academically sound Lee-Mykland jump detection.
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

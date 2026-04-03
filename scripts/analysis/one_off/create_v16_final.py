@@ -6,7 +6,6 @@ This script creates v1.6 by removing alternative jump detection methods
 (sigma_jump, zscore_jump) and keeping only the academically rigorous
 Lee-Mykland (2008) jump detection.
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

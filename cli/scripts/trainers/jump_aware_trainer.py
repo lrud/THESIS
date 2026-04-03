@@ -5,7 +5,6 @@ Jump-Aware LSTM Trainer
 
 Trainer for jump-aware LSTM models with weighted loss.
 
-Author: Claude Code Assistant
 """
 
 import sys

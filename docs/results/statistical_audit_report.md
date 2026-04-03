@@ -2,7 +2,7 @@
 
 **Date:** April 3, 2026  
 **Scope:** All LSTM training results (512x3, 512x7, 72h normalization, single-GPU)  
-**Auditor:** Claude AI (with literature-backed reference points)  
+**Auditor:** Statistical review of training pipeline  
 **Status:** CRITICAL FINDINGS — results require reinterpretation  
 
 ---

@@ -5,7 +5,6 @@ Update v1.3 Dataset with Standard Lee-Mykland Jump Detection
 This script creates v1.4 of the dataset, replacing the data-driven jump
 detection with the academically correct Lee-Mykland (2008) implementation.
 
-Author: Claude AI
 Date: 2026-02-25
 """
 

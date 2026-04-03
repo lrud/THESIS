@@ -4,7 +4,6 @@ Debug with Real LSTM Predictions
 
 Test jump signal generation using actual LSTM predictions vs current DVOL.
 
-Author: Claude AI Assistant
 Date: November 2025
 """
 

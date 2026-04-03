@@ -436,7 +436,6 @@ Training runs on a dedicated AI server (`/root/thesis/`):
 - `docs/results/QUICK_REFERENCE.md` — Performance summary and thesis defense points
 - `docs/journal/2026-02-26.md` — Multi-window normalization analysis
 - `docs/journal/2026-02-25.md` — Dataset evolution (v1.1 → v1.6)
-- `CLAUDE.md` — Claude AI assistant guide
 
 ## References
 

@@ -4,7 +4,6 @@ Test Merged Jump + LSTM Data
 
 Create a quick merge of jump features with LSTM predictions to test clean jump generator.
 
-Author: Claude AI Assistant
 Date: November 2025
 """
 

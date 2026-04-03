@@ -14,7 +14,6 @@ Difference from rolling/jump-aware:
 - No rolling window normalization needed
 - Direct comparison to XGChange benchmarks (R²=0.50 baseline)
 
-Author: Claude Code Assistant
 Date: December 30, 2025
 Purpose: Option C - Train both LSTM variants (levels + changes)
 """
