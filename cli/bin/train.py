@@ -21,15 +21,15 @@ from datetime import datetime
 from pathlib import Path
 
 # Add paths for imports
-sys.path.append('cli/config')
-sys.path.append('cli/scripts')
+sys.path.append("cli/config")
+sys.path.append("cli/scripts")
 from config import get_config
 
 
 def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description='Train LSTM models with custom parameters',
+        description="Train LSTM models with custom parameters",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -41,62 +41,80 @@ Examples:
 
   # Load configuration from file
   python cli/bin/train.py jump_aware --config configs/my_experiment.json
-        """
+        """,
     )
 
     # Model type (required)
-    parser.add_argument('model_type',
-                       choices=['jump_aware', 'rolling', 'differenced', 'market', 'market_jumps', 'market_lags'],
-                       help='Model type to train')
+    parser.add_argument(
+        "model_type",
+        choices=[
+            "jump_aware",
+            "rolling",
+            "differenced",
+            "market",
+            "market_jumps",
+            "market_lags",
+            "no_lags",
+            "no_lags_jumps",
+            "lags",
+            "lags_jumps",
+        ],
+        help="Model type to train",
+    )
 
     # Configuration file option
-    parser.add_argument('--config', type=str,
-                       help='Load configuration from JSON file')
+    parser.add_argument("--config", type=str, help="Load configuration from JSON file")
 
     # Training parameters
-    parser.add_argument('--epochs', type=int,
-                       help='Number of training epochs')
-    parser.add_argument('--batch-size', type=int,
-                       help='Batch size')
-    parser.add_argument('--lr', '--learning-rate', type=float,
-                       help='Learning rate')
-    parser.add_argument('--hidden-size', type=int,
-                       help='LSTM hidden layer size')
-    parser.add_argument('--num-layers', type=int,
-                       help='Number of LSTM layers')
-    parser.add_argument('--dropout', type=float,
-                       help='Dropout rate')
-    parser.add_argument('--patience', type=int,
-                       help='Early stopping patience')
-    parser.add_argument('--sequence-length', type=int,
-                       help='Input sequence length')
+    parser.add_argument("--epochs", type=int, help="Number of training epochs")
+    parser.add_argument("--batch-size", type=int, help="Batch size")
+    parser.add_argument("--lr", "--learning-rate", type=float, help="Learning rate")
+    parser.add_argument("--hidden-size", type=int, help="LSTM hidden layer size")
+    parser.add_argument("--num-layers", type=int, help="Number of LSTM layers")
+    parser.add_argument("--dropout", type=float, help="Dropout rate")
+    parser.add_argument("--patience", type=int, help="Early stopping patience")
+    parser.add_argument("--sequence-length", type=int, help="Input sequence length")
 
     # Model-specific parameters
-    parser.add_argument('--window-size', type=int,
-                       help='Rolling window size (for jump_aware, rolling)')
-    parser.add_argument('--rolling-window', type=int,
-                       help='Rolling window for rolling normalization')
-    parser.add_argument('--forecast-horizon', type=int,
-                       help='Forecast horizon (for differenced)')
-    parser.add_argument('--weight-jump-periods', type=float,
-                       help='Weight for jump periods (for jump_aware)')
+    parser.add_argument(
+        "--window-size", type=int, help="Rolling window size (for jump_aware, rolling)"
+    )
+    parser.add_argument(
+        "--rolling-window", type=int, help="Rolling window for rolling normalization"
+    )
+    parser.add_argument(
+        "--forecast-horizon", type=int, help="Forecast horizon (for differenced)"
+    )
+    parser.add_argument(
+        "--weight-jump-periods",
+        type=float,
+        help="Weight for jump periods (for jump_aware)",
+    )
 
     # Hardware options
-    parser.add_argument('--use-multi-gpu', action='store_true',
-                       help='Enable multi-GPU training with DataParallel (AMD ROCm 7 supported)')
+    parser.add_argument(
+        "--use-multi-gpu",
+        action="store_true",
+        help="Enable multi-GPU training with DataParallel (AMD ROCm 7 supported)",
+    )
 
     # Output options
-    parser.add_argument('--save-prefix', type=str, default='cli',
-                       help='Prefix for saved model files')
-    parser.add_argument('--results-dir', type=str, default='results/cli_training',
-                       help='Directory to save results')
+    parser.add_argument(
+        "--save-prefix", type=str, default="cli", help="Prefix for saved model files"
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=str,
+        default="results/cli_training",
+        help="Directory to save results",
+    )
 
     return parser.parse_args()
 
 
 def load_config_from_file(config_path: str):
     """Load configuration from JSON file."""
-    with open(config_path, 'r') as f:
+    with open(config_path, "r") as f:
         return json.load(f)
 
 
@@ -110,20 +128,20 @@ def build_config_from_args(args):
 
     # Override with command line arguments
     arg_mapping = {
-        'epochs': 'epochs',
-        'batch_size': 'batch_size',
-        'lr': 'learning_rate',
-        'learning_rate': 'learning_rate',
-        'hidden_size': 'hidden_size',
-        'num_layers': 'num_layers',
-        'dropout': 'dropout',
-        'patience': 'patience',
-        'sequence_length': 'sequence_length',
-        'window_size': 'window_size',
-        'rolling_window': 'rolling_window',
-        'forecast_horizon': 'forecast_horizon',
-        'weight_jump_periods': 'weight_jump_periods',
-        'use_multi_gpu': 'use_multi_gpu'
+        "epochs": "epochs",
+        "batch_size": "batch_size",
+        "lr": "learning_rate",
+        "learning_rate": "learning_rate",
+        "hidden_size": "hidden_size",
+        "num_layers": "num_layers",
+        "dropout": "dropout",
+        "patience": "patience",
+        "sequence_length": "sequence_length",
+        "window_size": "window_size",
+        "rolling_window": "rolling_window",
+        "forecast_horizon": "forecast_horizon",
+        "weight_jump_periods": "weight_jump_periods",
+        "use_multi_gpu": "use_multi_gpu",
     }
 
     for arg_name, config_key in arg_mapping.items():
@@ -147,19 +165,34 @@ def main():
     results_dir = Path(args.results_dir) / date_folder
 
     # Import and run appropriate trainer
-    if args.model_type == 'jump_aware':
+    unified_models = [
+        "market",
+        "market_jumps",
+        "market_lags",
+        "no_lags",
+        "no_lags_jumps",
+        "lags",
+        "lags_jumps",
+    ]
+    if args.model_type == "jump_aware":
         from trainers.jump_aware_trainer import train_jump_aware
+
         train_jump_aware(config.to_dict(), args.save_prefix, str(results_dir))
-    elif args.model_type == 'rolling':
+    elif args.model_type == "rolling":
         from trainers.rolling_trainer import train_rolling
+
         train_rolling(config.to_dict(), args.save_prefix, str(results_dir))
-    elif args.model_type == 'differenced':
+    elif args.model_type == "differenced":
         from trainers.differenced_trainer import train_differenced
+
         train_differenced(config.to_dict(), args.save_prefix, str(results_dir))
-    elif args.model_type in ['market', 'market_jumps', 'market_lags']:
+    elif args.model_type in unified_models:
         from trainers.unified_trainer import train_unified
-        train_unified(args.model_type, config.to_dict(), args.save_prefix, str(results_dir))
+
+        train_unified(
+            args.model_type, config.to_dict(), args.save_prefix, str(results_dir)
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

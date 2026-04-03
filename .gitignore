@@ -63,5 +63,8 @@ logs/
 *.tmp
 *.temp
 
+# Research planning notes (private)
+THESIS/
+
 # IDE/Tool configs
 .mcp.json

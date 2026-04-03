@@ -1,10 +1,14 @@
 """Feature set configurations for unified LSTM training."""
 
 FEATURE_SETS = {
-    'market': {'input_size': 4, 'use_sample_weighting': False},
-    'market_jumps': {'input_size': 8, 'use_sample_weighting': True},
-    'market_lags': {'input_size': 7, 'use_sample_weighting': False},
-    'jump_aware': {'input_size': 11, 'use_sample_weighting': True}
+    "no_lags": {"input_size": 4, "use_sample_weighting": False},
+    "no_lags_jumps": {"input_size": 8, "use_sample_weighting": True},
+    "lags": {"input_size": 7, "use_sample_weighting": False},
+    "lags_jumps": {"input_size": 11, "use_sample_weighting": True},
+    "market": {"input_size": 4, "use_sample_weighting": False},
+    "market_jumps": {"input_size": 8, "use_sample_weighting": True},
+    "market_lags": {"input_size": 7, "use_sample_weighting": False},
+    "jump_aware": {"input_size": 11, "use_sample_weighting": True},
 }
 
 

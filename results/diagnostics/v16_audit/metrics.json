@@ -1,0 +1,695 @@
+{
+  "dataset": "bitcoin_lstm_features_v1.6_final.csv",
+  "audit_date": "2026-04-02",
+  "rows": 41055,
+  "columns": 19,
+  "date_range": "2021-04-23 09:00:00 to 2025-12-28 23:00:00",
+  "summary": {
+    "pass": 72,
+    "warn": 2,
+    "fail": 0,
+    "total_checks": 74
+  },
+  "feature_stats": {
+    "dvol": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 61.91783047131897,
+      "std": 18.646804241468413,
+      "min": 31.47,
+      "max": 166.39,
+      "nunique": 7441
+    },
+    "dvol_lag_1d": {
+      "nulls": 24,
+      "inf": 0,
+      "mean": 61.9293887548439,
+      "std": 18.64612922573613,
+      "min": 31.47,
+      "max": 166.39,
+      "nunique": 7441
+    },
+    "dvol_lag_7d": {
+      "nulls": 168,
+      "inf": 0,
+      "mean": 61.99613691393352,
+      "std": 18.6447525953738,
+      "min": 31.47,
+      "max": 166.39,
+      "nunique": 7440
+    },
+    "dvol_lag_30d": {
+      "nulls": 720,
+      "inf": 0,
+      "mean": 62.19836742283376,
+      "std": 18.68925222097538,
+      "min": 31.47,
+      "max": 166.39,
+      "nunique": 7439
+    },
+    "network_activity": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 15819.053611009622,
+      "std": 9618.449696429601,
+      "min": 244.0,
+      "max": 98585.0,
+      "nunique": 21653
+    },
+    "nvrv": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 0.799018680324535,
+      "std": 0.5152580301538358,
+      "min": -0.2485876136940758,
+      "max": 2.000880217240681,
+      "nunique": 40939
+    },
+    "dvol_rv_spread": {
+      "nulls": 24,
+      "inf": 0,
+      "mean": 61.259753532596434,
+      "std": 18.596759136160514,
+      "min": 30.920393876825923,
+      "max": 165.08617577668718,
+      "nunique": 41015
+    },
+    "transaction_volume": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 3032701217.7735624,
+      "std": 3736842031.491055,
+      "min": 5431.0,
+      "max": 125674941946.66109,
+      "nunique": 40920
+    },
+    "lee_mykland_stat": {
+      "nulls": 2,
+      "inf": 0,
+      "mean": -0.00018820683439385407,
+      "std": 1.4655389121354034,
+      "min": -16.035209802847245,
+      "max": 34.784238072803284,
+      "nunique": 40388
+    },
+    "lee_mykland_jump": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 0.005748386311046158,
+      "std": 0.07560080410354621,
+      "min": 0.0,
+      "max": 1.0,
+      "nunique": 2
+    },
+    "jump_magnitude": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 0.00035072536516436405,
+      "std": 0.005518974973910003,
+      "min": 0.0,
+      "max": 0.3601479426722147,
+      "nunique": 237
+    },
+    "hours_since_jump": {
+      "nulls": 65,
+      "inf": 0,
+      "mean": 193.48585020736766,
+      "std": 167.1573696048322,
+      "min": 0.0,
+      "max": 956.0,
+      "nunique": 957
+    },
+    "days_since_jump": {
+      "nulls": 65,
+      "inf": 0,
+      "mean": 8.061910425306985,
+      "std": 6.964890400201341,
+      "min": 0.0,
+      "max": 39.833333333333336,
+      "nunique": 957
+    },
+    "jump_cluster_7d": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 0.9657289002557545,
+      "std": 1.252763113205076,
+      "min": 0.0,
+      "max": 8.0,
+      "nunique": 9
+    },
+    "lee_mykland_jump_v13": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 0.012251857264644988,
+      "std": 0.1100092906739506,
+      "min": 0.0,
+      "max": 1.0,
+      "nunique": 2
+    },
+    "lee_mykland_stat_v13": {
+      "nulls": 24,
+      "inf": 0,
+      "mean": 2.7375021727269306,
+      "std": 25.936443309629087,
+      "min": -6.13996024767893,
+      "max": 1038.2982911866177,
+      "nunique": 40366
+    },
+    "lee_mykland_T_statistic": {
+      "nulls": 2,
+      "inf": 0,
+      "mean": -11.448402598465945,
+      "std": 4.257653514167352,
+      "min": -14.753187853464976,
+      "max": 113.1714972126086,
+      "nunique": 40388
+    },
+    "lee_mykland_threshold": {
+      "nulls": 0,
+      "inf": 0,
+      "mean": 9.210290369892833,
+      "std": 1.7763784736627137e-15,
+      "min": 9.210290369892835,
+      "max": 9.210290369892835,
+      "nunique": 1
+    }
+  },
+  "split_info": {
+    "train": {
+      "rows": 24633,
+      "start": "2021-04-23 09:00:00",
+      "end": "2024-02-13 17:00:00",
+      "dvol_mean": 68.64,
+      "jumps": 151
+    },
+    "val": {
+      "rows": 8211,
+      "start": "2024-02-13 18:00:00",
+      "end": "2025-01-20 20:00:00",
+      "dvol_mean": 58.47,
+      "jumps": 42
+    },
+    "test": {
+      "rows": 8211,
+      "start": "2025-01-20 21:00:00",
+      "end": "2025-12-28 23:00:00",
+      "dvol_mean": 45.19,
+      "jumps": 43
+    }
+  },
+  "jump_detection": {
+    "method": "Lee-Mykland (2008)",
+    "jumps": 236,
+    "jump_pct": 0.5748,
+    "threshold": 9.2103,
+    "event_hits": {
+      "China ban (May 2021)": 4,
+      "Luna collapse (May 2022)": 1,
+      "3AC/CELSIUS (Jun 2022)": 2,
+      "FTX collapse (Nov 2022)": 7,
+      "SVB crisis (Mar 2023)": 4,
+      "ETF approval (Jan 2024)": 0
+    }
+  },
+  "autocorrelation": {
+    "lag_1h": 0.999235,
+    "lag_24h": 0.982805,
+    "lag_168h": 0.914664
+  },
+  "adf_raw": {
+    "dvol": {
+      "adf_stat": -3.5683,
+      "p_value": 0.006396,
+      "stationary": "True"
+    },
+    "dvol_lag_1d": {
+      "adf_stat": -3.5638,
+      "p_value": 0.006492,
+      "stationary": "True"
+    },
+    "dvol_lag_7d": {
+      "adf_stat": -3.5018,
+      "p_value": 0.007941,
+      "stationary": "True"
+    },
+    "dvol_lag_30d": {
+      "adf_stat": -3.5069,
+      "p_value": 0.007812,
+      "stationary": "True"
+    },
+    "network_activity": {
+      "adf_stat": -8.2793,
+      "p_value": 0.0,
+      "stationary": "True"
+    },
+    "nvrv": {
+      "adf_stat": -2.2575,
+      "p_value": 0.186058,
+      "stationary": "False"
+    },
+    "dvol_rv_spread": {
+      "adf_stat": -3.3398,
+      "p_value": 0.013192,
+      "stationary": "True"
+    },
+    "transaction_volume": {
+      "adf_stat": -9.9893,
+      "p_value": 0.0,
+      "stationary": "True"
+    }
+  },
+  "adf_normalized": {
+    "dvol": {
+      "adf_stat": -10.6419,
+      "p_value": 0.0,
+      "stationary": "True"
+    },
+    "network_activity": {
+      "adf_stat": -15.9577,
+      "p_value": 0.0,
+      "stationary": "True"
+    },
+    "nvrv": {
+      "adf_stat": -8.6622,
+      "p_value": 0.0,
+      "stationary": "True"
+    },
+    "dvol_rv_spread": {
+      "adf_stat": -10.6025,
+      "p_value": 0.0,
+      "stationary": "True"
+    },
+    "transaction_volume": {
+      "adf_stat": -20.4495,
+      "p_value": 0.0,
+      "stationary": true
+    }
+  },
+  "vif": {
+    "dvol_lag_1d": 433.88,
+    "dvol_lag_7d": 94.52,
+    "dvol_lag_30d": 35.65,
+    "network_activity": 3.0,
+    "nvrv": 3.44,
+    "dvol_rv_spread": 415.15,
+    "transaction_volume": 1.96
+  },
+  "stale_data": {
+    "dvol": 2,
+    "nvrv": 1,
+    "network_activity": 1,
+    "transaction_volume": 1
+  },
+  "checks": {
+    "1_temporal": [
+      {
+        "check": "No missing hours (all diff=1h)",
+        "status": "PASS",
+        "detail": "gaps found: 0"
+      },
+      {
+        "check": "Total rows = expected hours",
+        "status": "PASS",
+        "detail": "rows=41055, expected=41055"
+      },
+      {
+        "check": "Start date correct",
+        "status": "PASS",
+        "detail": "start=2021-04-23 09:00:00"
+      },
+      {
+        "check": "End date correct",
+        "status": "PASS",
+        "detail": "end=2025-12-28 23:00:00"
+      },
+      {
+        "check": "No duplicate timestamps",
+        "status": "PASS",
+        "detail": "duplicates=0"
+      },
+      {
+        "check": "Hours uniformly distributed",
+        "status": "PASS",
+        "detail": "cv=0.0003 (threshold 0.15)"
+      }
+    ],
+    "2_feature_quality": [
+      {
+        "check": "dvol: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "dvol_lag_1d: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "dvol_lag_7d: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "dvol_lag_30d: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "network_activity: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "nvrv: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "dvol_rv_spread: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "transaction_volume: no infinite values",
+        "status": "PASS",
+        "detail": "inf_count=0"
+      },
+      {
+        "check": "dvol: nulls match expected (0)",
+        "status": "PASS",
+        "detail": "actual=0, expected=0"
+      },
+      {
+        "check": "network_activity: nulls match expected (0)",
+        "status": "PASS",
+        "detail": "actual=0, expected=0"
+      },
+      {
+        "check": "nvrv: nulls match expected (0)",
+        "status": "PASS",
+        "detail": "actual=0, expected=0"
+      },
+      {
+        "check": "transaction_volume: nulls match expected (0)",
+        "status": "PASS",
+        "detail": "actual=0, expected=0"
+      },
+      {
+        "check": "dvol_lag_1d: nulls match expected (24)",
+        "status": "PASS",
+        "detail": "actual=24, expected=24"
+      },
+      {
+        "check": "dvol_lag_7d: nulls match expected (168)",
+        "status": "PASS",
+        "detail": "actual=168, expected=168"
+      },
+      {
+        "check": "dvol_lag_30d: nulls match expected (720)",
+        "status": "PASS",
+        "detail": "actual=720, expected=720"
+      },
+      {
+        "check": "dvol_rv_spread: nulls match expected (24)",
+        "status": "PASS",
+        "detail": "actual=24, expected=24"
+      },
+      {
+        "check": "dvol: no negative values",
+        "status": "PASS",
+        "detail": "neg_count=0"
+      },
+      {
+        "check": "dvol: no zero values",
+        "status": "PASS",
+        "detail": "zero_count=0"
+      },
+      {
+        "check": "dvol range plausible [25, 200]",
+        "status": "PASS",
+        "detail": "range=[31.47, 166.39]"
+      },
+      {
+        "check": "network_activity: all positive",
+        "status": "PASS",
+        "detail": "non_positive=0"
+      },
+      {
+        "check": "transaction_volume: all positive",
+        "status": "PASS",
+        "detail": "non_positive=0"
+      },
+      {
+        "check": "DVOL coefficient of variation reasonable (0.1-1.0)",
+        "status": "PASS",
+        "detail": "CV=0.3012"
+      },
+      {
+        "check": "dvol: extreme outliers <1%",
+        "status": "PASS",
+        "detail": "outliers=13 (0.032%)"
+      },
+      {
+        "check": "dvol: skewness reasonable (-2 to 3)",
+        "status": "PASS",
+        "detail": "skew=0.8482, kurtosis=0.5431"
+      }
+    ],
+    "3_jump_detection": [
+      {
+        "check": "Lee-Mykland jumps \u2248 236 (standard implementation)",
+        "status": "PASS",
+        "detail": "jumps=236 (0.57%)"
+      },
+      {
+        "check": "Lee-Mykland threshold \u2248 9.21 (Gumbel \u03b2*)",
+        "status": "PASS",
+        "detail": "threshold=9.2103"
+      },
+      {
+        "check": "Threshold is constant across all rows",
+        "status": "PASS",
+        "detail": "unique values=1"
+      },
+      {
+        "check": "lee_mykland_jump is binary (0/1)",
+        "status": "PASS",
+        "detail": "unique values=[np.int64(0), np.int64(1)]"
+      },
+      {
+        "check": "jump_magnitude is 0 for non-jump rows",
+        "status": "PASS",
+        "detail": "non-zero count for non-jumps: 0"
+      },
+      {
+        "check": "jump_magnitude > 0 for jump rows",
+        "status": "PASS",
+        "detail": "zero mag jumps: 0"
+      },
+      {
+        "check": "T-statistic range plausible",
+        "status": "PASS",
+        "detail": "range=[-14.75, 113.17]"
+      },
+      {
+        "check": "hours_since_jump resets to 0 at each jump",
+        "status": "PASS",
+        "detail": "resets=236, expected=236"
+      },
+      {
+        "check": "Event detected: China ban (May 2021)",
+        "status": "PASS",
+        "detail": "jumps=4"
+      },
+      {
+        "check": "Event detected: Luna collapse (May 2022)",
+        "status": "PASS",
+        "detail": "jumps=1"
+      },
+      {
+        "check": "Event detected: 3AC/CELSIUS (Jun 2022)",
+        "status": "PASS",
+        "detail": "jumps=2"
+      },
+      {
+        "check": "Event detected: FTX collapse (Nov 2022)",
+        "status": "PASS",
+        "detail": "jumps=7"
+      },
+      {
+        "check": "Event detected: SVB crisis (Mar 2023)",
+        "status": "PASS",
+        "detail": "jumps=4"
+      },
+      {
+        "check": "Event detected: ETF approval (Jan 2024)",
+        "status": "WARN",
+        "detail": "jumps=0"
+      }
+    ],
+    "4_split_integrity": [
+      {
+        "check": "Train split is 60%",
+        "status": "PASS",
+        "detail": "train=24633, expected=24633"
+      },
+      {
+        "check": "Val split is 20%",
+        "status": "PASS",
+        "detail": "val=8211, expected=8211"
+      },
+      {
+        "check": "Test split is 20%",
+        "status": "PASS",
+        "detail": "test=8211, expected=8211"
+      },
+      {
+        "check": "Train ends before val starts",
+        "status": "PASS",
+        "detail": "train_end=2024-02-13 17:00:00, val_start=2024-02-13 18:00:00"
+      },
+      {
+        "check": "Val ends before test starts",
+        "status": "PASS",
+        "detail": "val_end=2025-01-20 20:00:00, test_start=2025-01-20 21:00:00"
+      },
+      {
+        "check": "Jumps present in all splits",
+        "status": "PASS",
+        "detail": "train=151, val=42, test=43"
+      },
+      {
+        "check": "DVOL mean shift train\u2192test < 50%",
+        "status": "PASS",
+        "detail": "shift=34.2% (train_mean=68.6, test_mean=45.2)"
+      }
+    ],
+    "5_relationships": [
+      {
+        "check": "DVOL lag-1 autocorrelation > 0.99",
+        "status": "PASS",
+        "detail": "\u03c1=0.999235"
+      },
+      {
+        "check": "DVOL lag-168 autocorrelation < 0.98",
+        "status": "PASS",
+        "detail": "\u03c1=0.914664"
+      },
+      {
+        "check": "dvol_rv_spread highly correlated with dvol (>0.95)",
+        "status": "PASS",
+        "detail": "\u03c1=0.9997"
+      },
+      {
+        "check": "dvol_lag_1d correlated with dvol (>0.97, expected ~0.98 for 24h lag)",
+        "status": "PASS",
+        "detail": "\u03c1=0.9828"
+      },
+      {
+        "check": "NVRV positively correlated with DVOL",
+        "status": "PASS",
+        "detail": "\u03c1=0.0096"
+      },
+      {
+        "check": "No multicollinearity (all VIF < 10)",
+        "status": "WARN",
+        "detail": "max VIF=433.88"
+      }
+    ],
+    "6_stationarity": [
+      {
+        "check": "Rolling normalization makes all features stationary",
+        "status": "PASS",
+        "detail": "all 5 features stationary after 720h rolling z-score"
+      }
+    ],
+    "7_dvol_rv_spread": [
+      {
+        "check": "DVOL-RV spread all positive (implied > realized)",
+        "status": "PASS",
+        "detail": "negative count: 0"
+      },
+      {
+        "check": "DVOL-RV spread range plausible",
+        "status": "PASS",
+        "detail": "range=[30.92, 165.09]"
+      },
+      {
+        "check": "DVOL-RV spread mean ~ DVOL mean (correlation ~1.0)",
+        "status": "PASS",
+        "detail": "spread_mean=61.26, dvol_mean=61.92"
+      },
+      {
+        "check": "DVOL-RV spread highly correlated with DVOL (>0.99)",
+        "status": "PASS",
+        "detail": "\u03c1=0.999692"
+      }
+    ],
+    "8_lag_integrity": [
+      {
+        "check": "dvol_lag_1d = dvol.shift(24) exactly",
+        "status": "PASS",
+        "detail": "max_diff=0.000000"
+      },
+      {
+        "check": "dvol_lag_7d = dvol.shift(168) exactly",
+        "status": "PASS",
+        "detail": "max_diff=0.000000"
+      },
+      {
+        "check": "dvol_lag_30d = dvol.shift(720) exactly",
+        "status": "PASS",
+        "detail": "max_diff=0.000000"
+      },
+      {
+        "check": "Lag NaNs only at start of dataset",
+        "status": "PASS",
+        "detail": "scattered NaNs after row 720: 0"
+      },
+      {
+        "check": "dvol_lag_1d NaNs only in first 24 rows",
+        "status": "PASS",
+        "detail": "NaNs after row 24: 0"
+      }
+    ],
+    "9_stale_data": [
+      {
+        "check": "dvol: max constant streak \u2264 5h",
+        "status": "PASS",
+        "detail": "max_streak=2h"
+      },
+      {
+        "check": "nvrv: max constant streak \u2264 5h",
+        "status": "PASS",
+        "detail": "max_streak=1h"
+      },
+      {
+        "check": "network_activity: max constant streak \u2264 5h",
+        "status": "PASS",
+        "detail": "max_streak=1h"
+      },
+      {
+        "check": "transaction_volume: max constant streak \u2264 5h",
+        "status": "PASS",
+        "detail": "max_streak=1h"
+      }
+    ],
+    "10_nvrv": [
+      {
+        "check": "NVRV: 100% complete",
+        "status": "PASS",
+        "detail": "nulls=0"
+      },
+      {
+        "check": "NVRV range plausible (-0.5 to 5.0)",
+        "status": "PASS",
+        "detail": "range=[-0.2486, 2.0009]"
+      },
+      {
+        "check": "NVRV high uniqueness (>99%)",
+        "status": "PASS",
+        "detail": "unique=40939, ratio=0.997175"
+      }
+    ]
+  }
+}
